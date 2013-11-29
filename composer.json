@@ -1,0 +1,27 @@
+{
+    "name": "mihaeu/odin",
+    "description": "Static site generator.",
+    "require": {
+        "symfony/yaml": "*",
+        "twig/twig": "*",
+        "symfony/console": "*",
+        "pimple/pimple": "*",
+        "dflydev/markdown": "*"
+    },
+    "require-dev": {
+        "raveren/kint": "*"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Michael Haeuslmann",
+            "email": "haeuslmann@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Mihaeu": "src"
+        }
+    },
+    "minimum-stability": "stable"
+}

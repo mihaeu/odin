@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="{{ description }}" />
+    <title>{{ site.title }}</title>
+</head>
+<body>
+    <head>
+        <h1>
+            {{ site.title }}
+        </h1>
+    </head>
+    <nav>
+        <ul>
+            {% for resource in resources %}
+                <li>
+                    <a href="{{ site.url }}/{{ resource.slug }}">{{ resource.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+    <section>
+        <h1>
+            {{ title }}
+        </h1>
+        {{ content }}
+    </section>
+    <footer>
+        &copy; {{ "now"|date("Y") }} {{ site.author }}
+    </footer>
+</body>
+</html>
