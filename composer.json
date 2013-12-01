@@ -6,10 +6,10 @@
         "twig/twig": "*",
         "symfony/console": "*",
         "pimple/pimple": "*",
-        "dflydev/markdown": "*"
+        "dflydev/markdown": "*",
+        "monolog/monolog": "*"
     },
     "require-dev": {
-        "raveren/kint": "*"
     },
     "license": "MIT",
     "authors": [
