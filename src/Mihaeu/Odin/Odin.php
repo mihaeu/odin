@@ -31,6 +31,7 @@ class Odin extends \Pimple
  \___/ \__,_|_|_| |_|
 EOT;
 		$this['base.dir'] = realpath(__DIR__.'/../../..');
+		$this['resource.extensions'] = ['md', 'markdown', 'twig', 'html', 'xhtml', 'txt', 'xml'];
 
 		$this['config'] = $this->share(function ()
 		{
@@ -42,9 +43,9 @@ EOT;
 			return new Templating\TwigEngine();
 		});
 
-		$this['locator'] = $this->share(function ()
+		$this['locator'] = $this->share(function ($this)
 		{
-			return new Resource\Locator();
+			return new Resource\Locator($this['resource.extensions']);
 		});
 
 		$this['parser'] = $this->share(function ()
@@ -67,12 +68,4 @@ EOT;
 			return new \Monolog\Logger('logger');
 		});
 	}
-
-
-
-
-
-
-
-
 }

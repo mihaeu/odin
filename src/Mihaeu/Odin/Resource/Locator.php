@@ -4,14 +4,25 @@ namespace Mihaeu\Odin\Resource;
 
 class Locator
 {
-	public $allowedExtensions = ['md', 'markdown', 'twig', 'html', 'xhtml', 'txt', 'xml'];
+	/**
+	 * @var array
+	 */
+	public $allowedExtensions;
+
+	public function __construct(array $allowedExtensions)
+	{
+		$this->allowedExtensions = $allowedExtensions;
+	}
 
 	/**
-	 * @param $path
+	 * Recursively search a path for resources.
 	 *
-	 * @return array
+	 * @param string $path Path to the folder containing the resources.
+	 * @param $type int Type of resources t be found at this path (Resource::TYPE_USER etc.)
+	 *
+	 * @return array Resources
 	 */
-	public function locate($path)
+	public function locate($path, $type)
 	{
 		if ( ! file_exists($path) || ! is_dir($path))
 		{
@@ -30,7 +41,7 @@ class Locator
 			if (strpos($file->getFilename(), '.') !== 0
 				&& in_array($file->getExtension(), $this->allowedExtensions))
 			{
-				$resources[] = new Resource($file);
+				$resources[] = new Resource($file, $type);
 			}
 		}
 		return $resources;
