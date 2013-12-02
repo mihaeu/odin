@@ -4,7 +4,7 @@ namespace Mihaeu\Odin\Resource\Content;
 
 use Mihaeu\Odin\Resource\Resource;
 
-interface ContentTransformer
+interface ContentTransformerInterface
 {
-	public function parse(Resource $resource);
+	public function transform(Resource &$resource);
 }

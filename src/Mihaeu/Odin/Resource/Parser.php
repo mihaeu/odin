@@ -46,6 +46,11 @@ class Parser
 		return $resource;
 	}
 
+	/**
+	 * @param $content
+	 *
+	 * @return Meta\MetaParserInterface
+	 */
 	public function getMetaParser($content)
 	{
 		if (Meta\FrontmatterParser::isFrontmatter($content) === true)

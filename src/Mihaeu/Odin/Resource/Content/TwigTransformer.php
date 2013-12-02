@@ -11,8 +11,30 @@ use Mihaeu\Odin\Resource\Resource;
  */
 class TwigTransformer implements ContentTransformerInterface
 {
-    public function parse(Resource $resource)
+	/**
+	 * @param Resource $resource
+	 *
+	 * @return bool
+	 */
+	public static function isTwig(Resource $resource)
+	{
+		$contentTypeSet = isset($resource->meta['content_type']);
+		$contentTypeSetAndCorrect = $contentTypeSet && $resource->meta['content_type'] === 'twig';
+
+//		$markdownFileExtensions = ['twig'];
+//		$correctExtension = in_array(strtolower($resource->file->getExtension()), $markdownFileExtensions);
+		$correctExtension = strtolower($resource->file->getExtension()) === 'twig';
+
+		$contentTypeNotSetButCorrectExtension = ! $contentTypeSet && $correctExtension;
+
+		return $contentTypeSetAndCorrect || $contentTypeNotSetButCorrectExtension;
+	}
+
+    public function transform(Resource &$resource)
     {
-        return '';
+	    $twig = new \Twig_Environment(new \Twig_Loader_String());
+
+	    $resource->contentType = Resource::CONTENT_TYPE_TWIG;
+	    return $twig->render($resource->content);
     }
 }

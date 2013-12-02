@@ -2,6 +2,10 @@
 
 namespace Mihaeu\Odin\Resource;
 
+use Mihaeu\Odin\Resource\Content\PlainTransformer;
+use Mihaeu\Odin\Resource\Content\TwigTransformer;
+use Mihaeu\Odin\Resource\Content\MarkdownTransformer;
+use Mihaeu\Odin\Resource\Content\ContentTransformerInterface;
 use dflydev\markdown\MarkdownExtraParser;
 
 class Transformer
@@ -16,20 +20,36 @@ class Transformer
 		$transformedResources = [];
 		foreach ($resources as $resource)
 		{
-			$this->transform($resource);
+			$transformedResources[] = $this->transform($resource);
 		}
 		return $transformedResources;
 	}
 
-	public function transform(Resource &$resource)
+	public function transform(Resource $resource)
 	{
-		if (preg_match('/\.(md)|(markdown)$/', $resource->file)) {
-			$markdownParser = new MarkdownExtraParser();
-			$content = $markdownParser->transformMarkdown($resource->content);
-		}
+		$contentTransformer = $this->getContentTransformer($resource);
+		$resource->content = $contentTransformer->transform($resource);
+		return $resource;
+	}
 
-		if (!isset($properties['slug'])) {
-			$properties['slug'] = rand(0, 9999) . time() . rand(0, 9999);
+	/**
+	 * @param Resource $resource
+	 *
+	 * @return ContentTransformerInterface
+	 */
+	public function getContentTransformer(Resource $resource)
+	{
+		if (MarkdownTransformer::isMarkdown($resource))
+		{
+			return new Content\MarkdownTransformer();
+		}
+		else if (TwigTransformer::isTwig($resource))
+		{
+			return new Content\TwigTransformer();
+		}
+		else
+		{
+			return new Content\PlainTransformer();
 		}
 	}
 
