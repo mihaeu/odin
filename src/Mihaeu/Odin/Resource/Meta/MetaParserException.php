@@ -3,18 +3,9 @@
 namespace Mihaeu\Odin\Resource\Meta;
 
 /**
- * Class Meta
+ * Class MetaParserException
  *
  * @package Mihaeu\Odin\Resource\Meta
  * @author Michael Haeuslmann <haeuslmann@gmail.com>
  */
-class Meta
-{
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        // ...
-    }
-}
+class MetaParserException extends \Exception {}

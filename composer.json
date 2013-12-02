@@ -6,8 +6,9 @@
         "twig/twig": "*",
         "symfony/console": "*",
         "pimple/pimple": "*",
+        "monolog/monolog": "*",
         "dflydev/markdown": "*",
-        "monolog/monolog": "*"
+        "kzykhys/ciconia": "~1.0.0"
     },
     "require-dev": {
     },

@@ -4,7 +4,7 @@ namespace Mihaeu\Odin\Resource\Meta;
 
 use Mihaeu\Odin\Resource\Resource;
 
-interface MetaParser
+interface MetaParserInterface
 {
-	public function parse(Resource $resource);
+	public function parse(Resource &$resource);
 }

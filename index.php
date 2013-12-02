@@ -19,6 +19,6 @@ $systemResources = $odin['locator']->locate($systemResourcePath, Resource::TYPE_
 $resources = array_merge($userResources, $themeResources, $systemResources);
 
 $parsedResources = $odin['parser']->parseAll($resources);
-var_dump($parsedResources[0]);
+var_dump($parsedResources);
 // $transformedResources = $odin['transformer']->transformAll($parsedResources);
 // $odin['writer']->writeAll($transformedResources);

@@ -6,7 +6,7 @@ use dflydev\markdown\MarkdownExtraParser;
 use Symfony\Component\Yaml\Yaml;
 
 /**
- * The resource parser will figure out what meta and content type a
+ * The resource parser will figure out what meta type a
  * resource has and parse them appropriately.
  *
  * @package Mihaeu\Odin\Resource
@@ -40,12 +40,9 @@ class Parser
 	{
 		// check what type of meta information and content the resource holds and fetch
 		// the appropriate parser
-		$content = file_get_contents($resource->file->getRealPath());
-		$metaParser = $this->getMetaParser($content);
-		$contentParser = $this->getContentParser($resource);
+		$metaParser = $this->getMetaParser($resource->content);
 
 		$resource->meta = $metaParser->parse($resource);
-		$resource->content = $contentParser->parse($resource);
 		return $resource;
 	}
 
@@ -60,12 +57,6 @@ class Parser
 		{
 			return new Meta\ConventionParser();
 		}
-	}
-
-	public function getContentParser()
-	{
-		// decide what content format: markdown, twig, ...
-		return new Content\TwigParser();
 	}
 }
 
