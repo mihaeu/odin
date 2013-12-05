@@ -4,6 +4,7 @@ namespace Mihaeu\Odin\Templating;
 
 use Mihaeu\Odin\Resource\Resource;
 use Mihaeu\Odin\Configuration\ConfigurationInterface;
+use Mihaeu\Odin\Container\Container;
 
 /**
  * Class Templating
@@ -23,11 +24,17 @@ class Templating
     private $cfg;
 
     /**
+     * @var Container
+     */
+    private $container;
+
+    /**
      * Constructor.
      */
-    public function __construct(TemplatingFactory $templatingFactory, ConfigurationInterface $cfg)
+    public function __construct(TemplatingFactory $templatingFactory, ConfigurationInterface $cfg, Container $container)
     {
         $this->cfg = $cfg;
+        $this->container = $container;
         $this->templating = $templatingFactory->getTemplating();
 
         $userTemplates = $cfg->get('base_dir').'/'.$this->cfg->get('user_templates');
@@ -40,7 +47,7 @@ class Templating
         $this->templating->registerTemplates($systemTemplates, 'system');
     }
 
-    public function render(Resource $resource)
+    public function render(Resource $resource, Array $containerArray)
     {
         // standalone resources do not not have a template, they are templates themselves and
         // have already been parsed as a resource
@@ -49,18 +56,26 @@ class Templating
                 ? $resource->meta['layout']
                 : $this->cfg->get('default_template');
             $template = '@theme/index.html.twig';
-            $resource->content = $this->templating->renderTemplate($template, [
-                    'content' => $resource->content
-            ] + ['site' => $this->cfg->getAll()] + $resource->meta);
+
+            $data = array_merge(
+                $containerArray,
+                $resource->meta,
+                [
+                    'content' => $resource->content,
+                    'site'    => $this->cfg->getAll()
+                ]
+            );
+            $resource->content = $this->templating->renderTemplate($template, $data);
         }
         return $resource;
     }
 
     public function renderAll(Array $resources)
     {
+        $containerArray = $this->container->getContainerArray($resources);
         $renderedResources = [];
         foreach ($resources as $resource) {
-            $renderedResources[] = $this->render($resource);
+            $renderedResources[] = $this->render($resource, $containerArray);
         }
         return $renderedResources;
     }

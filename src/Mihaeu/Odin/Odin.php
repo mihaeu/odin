@@ -75,13 +75,13 @@ EOT;
 
         $this['templating'] = $this->share(
             function () {
-                return new Templating\Templating(new TemplatingFactory(), $this['config']);
+                return new Templating\Templating(new TemplatingFactory(), $this['config'], $this['container']);
             }
         );
 
-        $this['log'] = $this->share(
+        $this['container'] = $this->share(
             function () {
-                return new \Monolog\Logger('logger');
+                return new Container\Container($this['config']);
             }
         );
     }
