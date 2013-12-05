@@ -61,19 +61,19 @@ class Container
             if (isset($resource->meta['categories']) && is_array($resource->meta['categories'])) {
                 // multiple categories
                 foreach ($resource->meta['categories'] as $category) {
-                    $this->container['categories'][$category][$id] = $metaAndContent;
+                    $this->container['all_categories'][$category][$id] = $metaAndContent;
                 }
             } else {
                 if (isset($resource->meta['categories'])) {
                     // only one category
-                    $this->container['categories'][$resource->meta['categories']][$id] = $metaAndContent;
+                    $this->container['all_categories'][$resource->meta['categories']][$id] = $metaAndContent;
                 } else {
                     if (isset($resource->meta['category'])) {
                         // only one category
-                        $this->container['categories'][$resource->meta['category']][$id] = $metaAndContent;
+                        $this->container['all_categories'][$resource->meta['category']][$id] = $metaAndContent;
                     } else {
                         // no category
-                        $this->container['categories']['none'][$id] = $metaAndContent;
+                        $this->container['all_categories']['none'][$id] = $metaAndContent;
                     }
                 }
             }
@@ -82,16 +82,16 @@ class Container
             if (isset($resource->meta['tags']) && is_array($resource->meta['tags'])) {
                 // multiple categories
                 foreach ($resource->meta['tags'] as $tag) {
-                    $this->container['tags'][$tag][$id] = $metaAndContent;
+                    $this->container['all_tags'][$tag][$id] = $metaAndContent;
                 }
             } else {
                 if (isset($resource->meta['tags'])) {
                     // only one category
-                    $this->container['tags'][$resource->meta['tags']][$id] = $metaAndContent;
+                    $this->container['all_tags'][$resource->meta['tags']][$id] = $metaAndContent;
                 } else {
                     if (isset($resource->meta['tag'])) {
                         // only one category
-                        $this->container['tags'][$resource->meta['tag']][$id] = $metaAndContent;
+                        $this->container['all_tags'][$resource->meta['tag']][$id] = $metaAndContent;
                     }
                 }
             }

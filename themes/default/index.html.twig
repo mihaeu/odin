@@ -1,3 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="bower_components/bootstrap/docs-assets/ico/favicon.png">
+
+    <title>{{ site.title }} | {{ title }}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <style>
+            /* Move down content because we have a fixed navbar that is 50px tall */
+        body {
+            padding-top: 70px;
+            padding-bottom: 20px;
+        }
+    </style>
+
+    {#<!-- Just for debugging purposes. Don't actually copy this line! -->#}
+    {#<!--[if lt IE 9]><script src="bower_components/bootstrap/docs-assets/js/ie8-responsive-file-warning.js"></script><![endif]-->#}
+
+    {#<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->#}
+    {#<!--[if lt IE 9]>#}
+    {#<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>#}
+    {#<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>#}
+    {#<![endif]-->#}
+</head>
+
+<body>
+
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">{{ site.title }}</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                {% for resource in resources %}
+                    <li>
+                        <a href="file:///tmp/{{ resource.file.fileName }}.html">{{ resource.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <div class="jumbotron">
+                <h1>{{ title }}</h1>
+                {{ content }}
+            </div>
+        </div>
+        <aside class="col-md-3">
+            <section>
+                <h2>Categories</h2>
+                <ul>
+                    {% for category, resource in all_categories %}
+                        <li>
+                            <a href="">{{ category }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            <section>
+            <section>
+                <h2>Tags</h2>
+                <ul>
+                    {% for tag, resource in all_tags %}
+                        <li>
+                            <a href="">{{ tag }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+        </aside>
+    </div>
+
+    <hr>
+
+    <footer class="row">
+        <p>&copy; {{ "now"|date("Y") }} {{ site.author }}</p>
+    </footer>
+</div> <!-- /container -->
+
+
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+{#<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>#}
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+{#
 <!doctype html>
 <html lang="en-US">
 <head>
@@ -26,8 +135,29 @@
         </h1>
         {{ content }}
     </section>
+    <aside>
+        <h2>Categories</h2>
+        <ul>
+            {% for category, resource in categories %}
+                <li>
+                    <a href="">{{ category }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </aside>
+    <aside>
+        <h2>Tags</h2>
+        <ul>
+            {% for tag, resource in tags %}
+                <li>
+                    <a href="">{{ tag }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </aside>
     <footer>
         &copy; {{ "now"|date("Y") }} {{ site.author }}
     </footer>
 </body>
 </html>
+#}
