@@ -4,30 +4,38 @@ namespace Mihaeu\Odin\Configuration;
 
 use Symfony\Component\Yaml\Yaml;
 
-class YamlConfiguration implements Configuration
+class YamlConfiguration implements ConfigurationInterface
 {
-	/**
-	 * @var array
-	 */
-	private $config;
+    /**
+     * @var array
+     */
+    private $config;
 
-	/**
-	 * @todo Check if YAML throws an exception and log.
-	 */
-	public function __construct()
-	{
-		$this->config = YAML::parse('config.yml');
-	}
+    /**
+     * @todo Check if YAML throws an exception and log.
+     */
+    public function __construct()
+    {
+        $this->config = YAML::parse('config.yml');
+    }
 
-	public function get($key)
-	{
-		return isset($this->config[$key])
-			? $this->config[$key]
-			: null;
-	}
+    public function get($key)
+    {
+        return isset($this->config[$key])
+            ? $this->config[$key]
+            : null;
+    }
 
-	public function set($key, $value)
-	{
-		$this->config[$key] = $value;
-	}
+    public function set($key, $value)
+    {
+        $this->config[$key] = $value;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAll()
+    {
+        return $this->config;
+    }
 }

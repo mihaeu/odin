@@ -2,6 +2,7 @@
     "name": "mihaeu/odin",
     "description": "Static site generator.",
     "require": {
+        "aura/di": "1.*",
         "symfony/yaml": "*",
         "twig/twig": "*",
         "symfony/console": "*",
