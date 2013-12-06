@@ -69,7 +69,7 @@ EOT;
 
         $this['writer'] = $this->share(
             function () {
-                return new Writer\Writer();
+                return new Writer\Writer($this['config']);
             }
         );
 

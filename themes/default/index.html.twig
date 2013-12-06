@@ -50,7 +50,7 @@
             <ul class="nav navbar-nav">
                 {% for resource in resources %}
                     <li>
-                        <a href="file:///tmp/{{ resource.file.fileName }}.html">{{ resource.title }}</a>
+                        <a href="{{ site.url }}/{{ resource.slug }}">{{ resource.title }}</a>
                     </li>
                 {% endfor %}
             </ul>

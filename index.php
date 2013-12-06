@@ -22,11 +22,11 @@ $resources = array_merge($userResources, $themeResources, $systemResources);
 
 $parsedResources = $odin['parser']->parseAll($resources);
 $transformedResources = $odin['transformer']->transformAll($parsedResources);
-$renderedTemplates = $odin['templating']->renderAll($transformedResources);
-//$odin['writer']->writeAll($renderedResources);
+$renderedResources = $odin['templating']->renderAll($transformedResources);
+$odin['writer']->writeAll($renderedResources);
 
 //var_dump($transformedResources);
 
-foreach ($resources as $resource) {
-    file_put_contents('/tmp/'.$resource->file->getFilename().'.html', $resource->content);
-}
+//foreach ($resources as $resource) {
+//    file_put_contents('/tmp/'.$resource->file->getFilename().'.html', $resource->content);
+//}
