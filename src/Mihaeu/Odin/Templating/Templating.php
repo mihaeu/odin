@@ -24,17 +24,11 @@ class Templating
     private $cfg;
 
     /**
-     * @var Container
-     */
-    private $container;
-
-    /**
      * Constructor.
      */
-    public function __construct(TemplatingFactory $templatingFactory, ConfigurationInterface $cfg, Container $container)
+    public function __construct(TemplatingFactory $templatingFactory, ConfigurationInterface $cfg)
     {
         $this->cfg = $cfg;
-        $this->container = $container;
         $this->templating = $templatingFactory->getTemplating();
 
         $userTemplates = $cfg->get('base_dir').'/'.$this->cfg->get('user_templates');
@@ -47,36 +41,32 @@ class Templating
         $this->templating->registerTemplates($systemTemplates, 'system');
     }
 
-    public function render(Resource $resource, Array $containerArray)
+    public function renderContainer(Container &$container)
     {
-        // standalone resources do not not have a template, they are templates themselves and
-        // have already been parsed as a resource
-        if (!isset($resource->meta['standalone']) || $resource->meta['standalone'] === false) {
-            $template = isset($resource->meta['layout'])
-                ? $resource->meta['layout']
-                : $this->cfg->get('default_template');
-            $template = '@theme/index.html.twig';
+        $containerArray = $container->getContainerArray();
+        foreach ($container->getResources() as $resource) {
+            // standalone resources do not not have a template, they are templates themselves and
+            // have already been parsed as a resource
+            if (empty($resource->meta['standalone'])) {
+                $template = $this->cfg->get('default_layout');
+                if (!empty($resource->meta['layout'])) {
+                    $template = $resource->meta['layout'];
+                }
 
-            $data = array_merge(
-                $containerArray,
-                $resource->meta,
-                [
-                    'content' => $resource->content,
-                    'site'    => $this->cfg->getAll()
-                ]
-            );
-            $resource->content = $this->templating->renderTemplate($template, $data);
+                // render template using container and current resource
+                $resource->content = $this->templating->renderTemplate(
+                    $template,
+                    array_merge(
+                        $containerArray,
+                        $resource->meta,
+                        [
+                            'content' => $resource->content,
+                            'site'    => $this->cfg->getAll()
+                        ]
+                    )
+                );
+            }
+            $container->setResource($resource->getId(), $resource);
         }
-        return $resource;
-    }
-
-    public function renderAll(Array $resources)
-    {
-        $containerArray = $this->container->getContainerArray($resources);
-        $renderedResources = [];
-        foreach ($resources as $resource) {
-            $renderedResources[] = $this->render($resource, $containerArray);
-        }
-        return $renderedResources;
     }
 }

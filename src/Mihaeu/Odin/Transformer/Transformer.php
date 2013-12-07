@@ -3,7 +3,7 @@
 namespace Mihaeu\Odin\Transformer;
 
 use Mihaeu\Odin\Resource\Resource;
-use Mihaeu\Odin\Transformer\TransformerInterface;
+use Mihaeu\Odin\Container\Container;
 use dflydev\markdown\MarkdownExtraParser;
 
 class Transformer
@@ -37,5 +37,13 @@ class Transformer
         $contentTransformer = $this->transformerFactory->getTransformer($resource);
         $resource->content = $contentTransformer->transform($resource);
         return $resource;
+    }
+
+    public function transformContainer(Container &$container)
+    {
+        foreach ($container->getResources() as $resource) {
+            $resource = $this->transform($resource);
+            $container->setResource($resource->getId(), $resource);
+        }
     }
 }

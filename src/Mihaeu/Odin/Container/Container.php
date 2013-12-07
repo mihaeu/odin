@@ -13,90 +13,147 @@ use Mihaeu\Odin\Configuration\ConfigurationInterface;
 class Container
 {
     /**
-     * @var array
-     */
-    private $container;
-
-    /**
      * @var \Mihaeu\Odin\Configuration\ConfigurationInterface
      */
     private $config;
+
+    /**
+     * @var array
+     */
+    private $resources;
 
     /**
      * Constructor.
      */
     public function __construct(ConfigurationInterface $config)
     {
+        $this->setConfig($config);
+    }
+
+    public function setConfig(ConfigurationInterface $config)
+    {
         $this->config = $config;
     }
 
-    public function getContainerArray(Array $resources)
+    public function addResource(Resource $resource)
     {
-        $this->container = ['site' => $this->config->getAll()];
+        if (empty($this->resources[$resource->getId()])) {
+            $this->setResource($resource->getId(), $resource);
+            return true;
+        }
+        return false;
+    }
 
-        // fill container with resources
-        foreach ($resources as $resource) {
-            $id = $resource->file->getRealPath();
-            $metaAndContent = array_merge(
-                $resource->meta,
-                [
-                    'content' => $resource->content,
-                    'type'    => $resource->type,
-                    'file'    => $resource->file
-                ]
-            );
+    public function setResource($id, Resource $resource)
+    {
+        $this->resources[$id] = $resource;
+    }
 
-            // separate resources by type
-            if ($resource->type === Resource::TYPE_USER) {
-                $this->container['resources'][$id] = $metaAndContent;
-            } else {
-                if ($resource->type === Resource::TYPE_THEME) {
-                    $this->container['resources_theme'][$id] = $metaAndContent;
-                } else {
-                    $this->container['resources_system'][$id] = $metaAndContent;
+    public function getResource($id)
+    {
+        if (empty($this->resources[$id])) {
+            return false;
+        }
+        return $this->resources[$id];
+    }
+
+    public function removeResource($id)
+    {
+        if (empty($this->resources[$id])) {
+            return false;
+        }
+        unset($this->resources[$id]);
+        return true;
+    }
+
+    public function getResources()
+    {
+        return $this->resources;
+    }
+
+    public function getContainerArray()
+    {
+        $userResources = array_map(
+            function (Resource $resource) {
+                return $resource->type === Resource::TYPE_USER;
+            },
+            $this->resources
+        );
+        $themeResources = array_map(
+            function (Resource $resource) {
+                return $resource->type === Resource::TYPE_THEME;
+            },
+            $this->resources
+        );
+        $systemResources = array_map(
+            function (Resource $resource) {
+                return $resource->type === Resource::TYPE_SYSTEM;
+            },
+            $this->resources
+        );
+
+        return [
+            'site'             => $this->config->getAll(),
+            'resources'        => $this->flattenResources($userResources),
+            'theme_resources'  => $this->flattenResources($themeResources),
+            'system_resources' => $this->flattenResources($systemResources),
+            'all_tags'         => $this->flattenResources($this->getTags()),
+            'all_categories'   => $this->flattenResources($this->getCategories())
+        ];
+    }
+
+    public function flattenResources(Array $resources)
+    {
+        return $resources;
+    }
+
+    public function getTags()
+    {
+        $tags = [];
+        foreach ($this->resources as $resource) {
+            if (isset($resource->meta['tags']) && is_array($resource->meta['tags'])) {
+                // multiple tags
+                foreach ($resource->meta['tags'] as $tag) {
+                    $tags[$tag] = $resource;
                 }
+            } elseif (isset($resource->meta['tags'])) {
+                // only one tag
+                $tags[$resource->meta['tags']] = $resource;
+            } elseif (isset($resource->meta['tag'])) {
+                // only one tag
+                $tags[$resource->meta['tag']] = $resource;
             }
+        }
+        return $tags;
+    }
 
-            // filter categories
+    public function getCategories()
+    {
+        $categories = [];
+        foreach ($this->resources as $resource) {
             if (isset($resource->meta['categories']) && is_array($resource->meta['categories'])) {
                 // multiple categories
                 foreach ($resource->meta['categories'] as $category) {
-                    $this->container['all_categories'][$category][$id] = $metaAndContent;
+                    $categories[$category] = $resource;
                 }
+            } elseif (isset($resource->meta['categories'])) {
+                // only one category
+                $categories[$resource->meta['categories']] = $resource;
+            } elseif (isset($resource->meta['category'])) {
+                // only one category
+                $categories[$resource->meta['category']] = $resource;
             } else {
-                if (isset($resource->meta['categories'])) {
-                    // only one category
-                    $this->container['all_categories'][$resource->meta['categories']][$id] = $metaAndContent;
-                } else {
-                    if (isset($resource->meta['category'])) {
-                        // only one category
-                        $this->container['all_categories'][$resource->meta['category']][$id] = $metaAndContent;
-                    } else {
-                        // no category
-                        $this->container['all_categories']['none'][$id] = $metaAndContent;
-                    }
-                }
-            }
-
-            // filter tags
-            if (isset($resource->meta['tags']) && is_array($resource->meta['tags'])) {
-                // multiple categories
-                foreach ($resource->meta['tags'] as $tag) {
-                    $this->container['all_tags'][$tag][$id] = $metaAndContent;
-                }
-            } else {
-                if (isset($resource->meta['tags'])) {
-                    // only one category
-                    $this->container['all_tags'][$resource->meta['tags']][$id] = $metaAndContent;
-                } else {
-                    if (isset($resource->meta['tag'])) {
-                        // only one category
-                        $this->container['all_tags'][$resource->meta['tag']][$id] = $metaAndContent;
-                    }
-                }
+                // no category
+                $categories['none'] = $resource;
             }
         }
+        return $categories;
+    }
 
-        return $this->container;
+    public function addResources(Array $resources)
+    {
+        foreach ($resources as $resource) {
+            $this->addResource($resource);
+        }
     }
 }

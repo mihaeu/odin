@@ -18,15 +18,13 @@ $userResources = $locator->locate($userResourcePath, Resource::TYPE_USER);
 $themeResources = $locator->locate($themeResourcePath, Resource::TYPE_THEME);
 $systemResources = $locator->locate($systemResourcePath, Resource::TYPE_SYSTEM);
 
-$resources = array_merge($userResources, $themeResources, $systemResources);
+$container = $odin['container'];
+$container->addResources(array_merge($userResources, $themeResources, $systemResources));
 
-$parsedResources = $odin['parser']->parseAll($resources);
-$transformedResources = $odin['transformer']->transformAll($parsedResources);
-$renderedResources = $odin['templating']->renderAll($transformedResources);
-$odin['writer']->writeAll($renderedResources);
+$odin['parser']->parseContainer($container);
+$odin['transformer']->transformContainer($container);
 
-//var_dump($transformedResources);
+$odin['templating']->renderContainer($container);
+$odin['writer']->writeContainer($container);
 
-//foreach ($resources as $resource) {
-//    file_put_contents('/tmp/'.$resource->file->getFilename().'.html', $resource->content);
-//}
+var_dump($container->getContainerArray());exit;

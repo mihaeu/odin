@@ -4,6 +4,7 @@ namespace Mihaeu\Odin\Parser;
 
 use dflydev\markdown\MarkdownExtraParser;
 use Mihaeu\Odin\Resource\Resource;
+use Mihaeu\Odin\Container\Container;
 
 /**
  * The resource parser will figure out what meta type a
@@ -51,21 +52,12 @@ class Parser
         $resource->meta = $partialMeta;
         return $resource;
     }
+
+    public function parseContainer(Container &$container)
+    {
+        foreach ($container->getResources() as $resource) {
+            $resource = $this->parse($resource);
+            $container->setResource($resource->getId(), $resource);
+        }
+    }
 }
-
-
-
-//$token = explode('---', $data);
-//
-//if (count($token) === 3) {
-//	$properties = YAML::parse(trim($token[1]));
-//	$content = $token[2];
-//} else {
-//	if (count($token) <= 2) {
-//		$properties = ['title' => time()];
-//		$content = $data;
-//	} else {
-//		$properties = YAML::parse(trim($token[1]));
-//		$content = implode(array_splice($token, 2));
-//	}
-//}

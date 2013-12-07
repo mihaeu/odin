@@ -3,6 +3,7 @@
 namespace Mihaeu\Odin\Writer;
 
 use Mihaeu\Odin\Resource\Resource;
+use Mihaeu\Odin\Container\Container;
 use Mihaeu\Odin\Configuration\ConfigurationInterface;
 
 /**
@@ -58,10 +59,10 @@ class Writer
         return $bytesWritten !== false;
     }
 
-    public function writeAll(Array $resources)
+    public function writeContainer(Container $container)
     {
-        foreach ($resources as $transformedResource) {
-            $this->write($transformedResource);
+        foreach ($container->getResources() as $resource) {
+            $this->write($resource);
         }
     }
 
@@ -137,7 +138,9 @@ class Writer
      */
     public function copyAssets()
     {
-        $themeFolder = $this->config->get('base_dir').'/'.$this->config->get('theme_folder').'/'.$this->config->get('theme');
+        $themeFolder = $this->config->get('base_dir').'/'.$this->config->get('theme_folder').'/'.$this->config->get(
+            'theme'
+        );
         $themeSubFolders = array_diff(scandir($themeFolder), ['.'], ['..']);
         foreach ($themeSubFolders as $file) {
             $folder = $themeFolder.'/'.$file;

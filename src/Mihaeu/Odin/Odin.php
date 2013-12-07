@@ -75,7 +75,7 @@ EOT;
 
         $this['templating'] = $this->share(
             function () {
-                return new Templating\Templating(new TemplatingFactory(), $this['config'], $this['container']);
+                return new Templating\Templating(new TemplatingFactory(), $this['config']);
             }
         );
 
