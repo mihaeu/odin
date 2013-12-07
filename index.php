@@ -27,4 +27,4 @@ $odin['transformer']->transformContainer($container);
 $odin['templating']->renderContainer($container);
 $odin['writer']->writeContainer($container);
 
-var_dump($container->getContainerArray());exit;
+//var_dump($container->getContainerArray());exit;

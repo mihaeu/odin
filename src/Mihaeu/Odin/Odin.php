@@ -57,7 +57,7 @@ EOT;
 
         $this['parser'] = $this->share(
             function () {
-                return new Parser\Parser(new ParserFactory());
+                return new Parser\Parser(new ParserFactory(), $this['config']);
             }
         );
 

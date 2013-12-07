@@ -7,12 +7,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="shortcut icon" href="bower_components/bootstrap/docs-assets/ico/favicon.png">
+    <link rel="shortcut icon" href="{{ site.url }}/bower_components/bootstrap/docs-assets/ico/favicon.png">
 
     <title>{{ site.title }} | {{ title }}</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="{{ site.url }}/bower_components/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <style>
@@ -72,17 +72,17 @@
                 <ul>
                     {% for category, resource in all_categories %}
                         <li>
-                            <a href="">{{ category }}</a>
+                            <a href="{{ site.url }}/category/{{ category }}">{{ category }}</a>
                         </li>
                     {% endfor %}
                 </ul>
-            <section>
+            </section>
             <section>
                 <h2>Tags</h2>
                 <ul>
                     {% for tag, resource in all_tags %}
                         <li>
-                            <a href="">{{ tag }}</a>
+                            <a href="{{ site.url }}/tag/{{ tag }}">{{ tag }}</a>
                         </li>
                     {% endfor %}
                 </ul>
@@ -102,62 +102,6 @@
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
 {#<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>#}
-<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="{{ site.url }}/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
-
-{#
-<!doctype html>
-<html lang="en-US">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="description" content="{{ description }}" />
-    <title>{{ site.title }}</title>
-</head>
-<body>
-    <head>
-        <h1>
-            {{ site.title }}
-        </h1>
-    </head>
-    <nav>
-        <ul>
-            {% for resource in resources %}
-                <li>
-                    <a href="{{ site.url }}/{{ resource.slug }}">{{ resource.title }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    </nav>
-    <section>
-        <h1>
-            {{ title }}
-        </h1>
-        {{ content }}
-    </section>
-    <aside>
-        <h2>Categories</h2>
-        <ul>
-            {% for category, resource in categories %}
-                <li>
-                    <a href="">{{ category }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    </aside>
-    <aside>
-        <h2>Tags</h2>
-        <ul>
-            {% for tag, resource in tags %}
-                <li>
-                    <a href="">{{ tag }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    </aside>
-    <footer>
-        &copy; {{ "now"|date("Y") }} {{ site.author }}
-    </footer>
-</body>
-</html>
-#}

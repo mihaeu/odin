@@ -61,7 +61,6 @@ class Templating
                         $resource->meta,
                         [
                             'content' => $resource->content,
-                            'site'    => $this->cfg->getAll()
                         ]
                     )
                 );

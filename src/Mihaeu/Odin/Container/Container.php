@@ -73,23 +73,23 @@ class Container
 
     public function getContainerArray()
     {
-        $userResources = array_map(
+        $userResources = array_filter(
+            $this->resources,
             function (Resource $resource) {
                 return $resource->type === Resource::TYPE_USER;
-            },
-            $this->resources
+            }
         );
-        $themeResources = array_map(
+        $themeResources = array_filter(
+            $this->resources,
             function (Resource $resource) {
                 return $resource->type === Resource::TYPE_THEME;
-            },
-            $this->resources
+            }
         );
-        $systemResources = array_map(
+        $systemResources = array_filter(
+            $this->resources,
             function (Resource $resource) {
                 return $resource->type === Resource::TYPE_SYSTEM;
-            },
-            $this->resources
+            }
         );
 
         return [
@@ -97,31 +97,48 @@ class Container
             'resources'        => $this->flattenResources($userResources),
             'theme_resources'  => $this->flattenResources($themeResources),
             'system_resources' => $this->flattenResources($systemResources),
-            'all_tags'         => $this->flattenResources($this->getTags()),
-            'all_categories'   => $this->flattenResources($this->getCategories())
+            'all_tags'         => $this->getTags(),
+            'all_categories'   => $this->getCategories()
         ];
+    }
+
+    public function flattenResource(Resource $resource)
+    {
+        return array_merge(
+            $resource->meta,
+            [
+                'file'    => $resource->file,
+                'type'    => $resource->type,
+                'content' => $resource->content
+            ]
+        );
     }
 
     public function flattenResources(Array $resources)
     {
-        return $resources;
+        $flatResources = [];
+        foreach ($resources as $resource) {
+            $flatResources[] = $this->flattenResource($resource);
+        }
+        return $flatResources;
     }
 
     public function getTags()
     {
         $tags = [];
         foreach ($this->resources as $resource) {
+            $flatResource = $this->flattenResource($resource);
             if (isset($resource->meta['tags']) && is_array($resource->meta['tags'])) {
                 // multiple tags
                 foreach ($resource->meta['tags'] as $tag) {
-                    $tags[$tag] = $resource;
+                    $tags[$tag] = $flatResource;
                 }
             } elseif (isset($resource->meta['tags'])) {
                 // only one tag
-                $tags[$resource->meta['tags']] = $resource;
+                $tags[$resource->meta['tags']] = $flatResource;
             } elseif (isset($resource->meta['tag'])) {
                 // only one tag
-                $tags[$resource->meta['tag']] = $resource;
+                $tags[$resource->meta['tag']] = $flatResource;
             }
         }
         return $tags;
@@ -131,22 +148,23 @@ class Container
     {
         $categories = [];
         foreach ($this->resources as $resource) {
+            $flatResource = $this->flattenResource($resource);
             if (isset($resource->meta['categories']) && is_array($resource->meta['categories'])) {
                 // multiple categories
                 foreach ($resource->meta['categories'] as $category) {
-                    $categories[$category] = $resource;
+                    $categories[$category] = $flatResource;
                 }
             } elseif (isset($resource->meta['categories'])) {
                 // only one category
-                $categories[$resource->meta['categories']] = $resource;
+                $categories[$resource->meta['categories']] = $flatResource;
             } elseif (isset($resource->meta['category'])) {
                 // only one category
-                $categories[$resource->meta['category']] = $resource;
+                $categories[$resource->meta['category']] = $flatResource;
             } else {
                 // no category
-                $categories['none'] = $resource;
+                $categories['none'] = $flatResource;
             }
-        }
+        }{}
         return $categories;
     }
 
