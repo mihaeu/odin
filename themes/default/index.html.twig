@@ -61,13 +61,11 @@
 <div class="container">
     <div class="row">
         <div class="col-md-9">
-            <div class="jumbotron">
-                <h1>{{ title }}</h1>
-                {{ content }}
-            </div>
+            <h1>{{ title }}</h1>
+            {{ content }}
         </div>
         <aside class="col-md-3">
-            <section>
+            <section class="well">
                 <h2>Categories</h2>
                 <ul>
                     {% for category, resource in all_categories %}
@@ -77,7 +75,7 @@
                     {% endfor %}
                 </ul>
             </section>
-            <section>
+            <section class="well">
                 <h2>Tags</h2>
                 <ul>
                     {% for tag, resource in all_tags %}

@@ -6,6 +6,7 @@ use dflydev\markdown\MarkdownExtraParser;
 use Mihaeu\Odin\Resource\Resource;
 use Mihaeu\Odin\Container\Container;
 use Mihaeu\Odin\Configuration\ConfigurationInterface;
+use Mihaeu\Odin\Writer\WriterException;
 
 /**
  * The resource parser will figure out what meta type a
@@ -54,8 +55,7 @@ class Parser
         // check what type of meta information and content the resource holds and fetch
         // the appropriate parser
         $metaParser = $this->parserFactory->getParser($resource);
-        $partialMeta = $metaParser->parse($resource);
-        $resource->meta = $partialMeta;
+        $resource->meta = $metaParser->parse($resource);
         $this->findResourceDestination($resource);
         return $resource;
     }
@@ -76,8 +76,9 @@ class Parser
             $slug = $this->createSlug($resource).$suffix;
             $resource->meta['slug'] = $slug;
         }
-        $destination = $this->getOutputPath().'/'.$resource->meta['slug'];;
-        $resource->meta['slug'] = str_replace('/index.html', '', $resource->meta['slug']);
+        $destination = $this->getOutputPath().'/'.$resource->meta['slug'];
+        $resource->meta['slug'] = str_replace('index.html', '', $resource->meta['slug']);
+        $resource->meta['slug'] = rtrim($resource->meta['slug'], '/');
         $resource->meta['destination'] = $destination;
 
         return $destination;
@@ -154,7 +155,6 @@ class Parser
         foreach ($tokens as $token) {
             $slugTokens[] = isset($slugMatches[$token]) ? $slugMatches[$token] : $token;
         }
-
         return implode('/', $slugTokens);
     }
 
@@ -191,5 +191,4 @@ class Parser
     {
         return is_dir($path) && is_writable($path);
     }
-
 }
