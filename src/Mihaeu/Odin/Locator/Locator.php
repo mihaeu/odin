@@ -3,6 +3,7 @@
 namespace Mihaeu\Odin\Locator;
 
 use Mihaeu\Odin\Resource\Resource;
+use Mihaeu\Odin\Configuration\ConfigurationInterface;
 
 class Locator
 {
@@ -11,9 +12,9 @@ class Locator
      */
     public $allowedExtensions;
 
-    public function __construct(array $allowedExtensions)
+    public function __construct(ConfigurationInterface $config)
     {
-        $this->allowedExtensions = $allowedExtensions;
+        $this->allowedExtensions = $config->get('resource_extensions');
     }
 
     /**
