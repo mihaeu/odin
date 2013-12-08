@@ -27,6 +27,9 @@ class Odin
     {
         $di = new Container(new Forge(new Config));
 
+        $di->params['Mihaeu\Odin\Configuration\Configuration'] = [
+            'configFactory' => $di->lazyGet('configFactory')
+        ];
         $di->params['Mihaeu\Odin\Locator\Locator'] = [
             'config' => $di->lazyGet('config')
         ];
@@ -48,7 +51,7 @@ class Odin
             'config' => $di->lazyGet('config')
         ];
 
-        $di->set('config', $di->lazyNew('Mihaeu\Odin\Configuration\YamlConfiguration'));
+        $di->set('config', $di->lazyNew('Mihaeu\Odin\Configuration\Configuration'));
         $di->set('locator', $di->lazyNew('Mihaeu\Odin\Locator\Locator'));
         $di->set('container', $di->lazyNew('Mihaeu\Odin\Container\Container'));
         $di->set('parser', $di->lazyNew('Mihaeu\Odin\Parser\Parser'));
@@ -56,6 +59,7 @@ class Odin
         $di->set('templating', $di->lazyNew('Mihaeu\Odin\Templating\Templating'));
         $di->set('writer', $di->lazyNew('Mihaeu\Odin\Writer\Writer'));
 
+        $di->set('configFactory', $di->lazyNew('Mihaeu\Odin\Configuration\ConfigurationFactory'));
         $di->set('parserFactory', $di->lazyNew('Mihaeu\Odin\Parser\ParserFactory'));
         $di->set('transformerFactory', $di->lazyNew('Mihaeu\Odin\Transformer\TransformerFactory'));
         $di->set('templatingFactory', $di->lazyNew('Mihaeu\Odin\Templating\TemplatingFactory'));
