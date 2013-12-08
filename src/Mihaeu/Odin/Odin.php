@@ -2,87 +2,64 @@
 
 namespace Mihaeu\Odin;
 
-use Mihaeu\Odin\Parser\ParserFactory;
-use Mihaeu\Odin\Templating\TemplatingFactory;
-use Mihaeu\Odin\Transformer\TransformerFactory;
+use Aura\Di\Container;
+use Aura\Di\Forge;
+use Aura\Di\Config;
 
-/**
- * Class Odin
- *
- * @package Mihaeu
- * @author  Michael Haeuslmann <haeuslmann@gmail.com>
- */
-class Odin extends \Pimple
+class Odin
 {
-    private $twig;
-    private $config;
-    private $meta;
-
     /**
-     * Constructor.
-     *
-     * @todo    check yaml file
-     * @todo    get all theme subfolders not just first level
+     * @var Aura\Di\Container
      */
+    private $di;
+
     public function __construct()
     {
-        $this['signature'] = <<<EOT
- _____     _ _
-|  _  |   | (_)
-| | | | __| |_ _ __
-| | | |/ _` | | '_ \
-\ \_/ / (_| | | | | |
- \___/ \__,_|_|_| |_|
-EOT;
-        $this['base.dir'] = realpath(__DIR__.'/../../..');
-        $this['resource.extensions'] = ['md', 'markdown', 'twig', 'html', 'xhtml', 'rst', 'txt', 'xml'];
+        $this->setupDI();
+    }
 
-        $this['config'] = $this->share(
-            function () {
-                return new Configuration\YamlConfiguration();
-            }
-        );
+    public function get($key)
+    {
+        return $this->di->get($key);
+    }
 
-        $this['templating'] = $this->share(
-            function () {
-                return new Templating\TwigEngine();
-            }
-        );
+    public function setupDI()
+    {
+        $di = new Container(new Forge(new Config));
 
-        $this['locator'] = $this->share(
-            function ($this) {
-                return new Locator\Locator($this['resource.extensions']);
-            }
-        );
+        $di->params['Mihaeu\Odin\Locator\Locator'] = [
+            'config' => $di->lazyGet('config')
+        ];
+        $di->params['Mihaeu\Odin\Container\Container'] = [
+            'config' => $di->lazyGet('config')
+        ];
+        $di->params['Mihaeu\Odin\Parser\Parser'] = [
+            'config' => $di->lazyGet('config'),
+            'parserFactory' => $di->lazyGet('parserFactory')
+        ];
+        $di->params['Mihaeu\Odin\Transformer\Transformer'] = [
+            'transformerFactory' => $di->lazyGet('transformerFactory'),
+        ];
+        $di->params['Mihaeu\Odin\Templating\Templating'] = [
+            'config' => $di->lazyGet('config'),
+            'templatingFactory' => $di->lazyGet('templatingFactory')
+        ];
+        $di->params['Mihaeu\Odin\Writer\Writer'] = [
+            'config' => $di->lazyGet('config')
+        ];
 
-        $this['parser'] = $this->share(
-            function () {
-                return new Parser\Parser(new ParserFactory(), $this['config']);
-            }
-        );
+        $di->set('config', $di->lazyNew('Mihaeu\Odin\Configuration\YamlConfiguration'));
+        $di->set('locator', $di->lazyNew('Mihaeu\Odin\Locator\Locator'));
+        $di->set('container', $di->lazyNew('Mihaeu\Odin\Container\Container'));
+        $di->set('parser', $di->lazyNew('Mihaeu\Odin\Parser\Parser'));
+        $di->set('transformer', $di->lazyNew('Mihaeu\Odin\Transformer\Transformer'));
+        $di->set('templating', $di->lazyNew('Mihaeu\Odin\Templating\Templating'));
+        $di->set('writer', $di->lazyNew('Mihaeu\Odin\Writer\Writer'));
 
-        $this['transformer'] = $this->share(
-            function () {
-                return new Transformer\Transformer(new TransformerFactory());
-            }
-        );
+        $di->set('parserFactory', $di->lazyNew('Mihaeu\Odin\Parser\ParserFactory'));
+        $di->set('transformerFactory', $di->lazyNew('Mihaeu\Odin\Transformer\TransformerFactory'));
+        $di->set('templatingFactory', $di->lazyNew('Mihaeu\Odin\Templating\TemplatingFactory'));
 
-        $this['writer'] = $this->share(
-            function () {
-                return new Writer\Writer($this['config']);
-            }
-        );
-
-        $this['templating'] = $this->share(
-            function () {
-                return new Templating\Templating(new TemplatingFactory(), $this['config']);
-            }
-        );
-
-        $this['container'] = $this->share(
-            function () {
-                return new Container\Container($this['config']);
-            }
-        );
+        $this->di = $di;
     }
 }

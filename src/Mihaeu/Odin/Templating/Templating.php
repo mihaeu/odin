@@ -26,18 +26,18 @@ class Templating
     /**
      * Constructor.
      */
-    public function __construct(TemplatingFactory $templatingFactory, ConfigurationInterface $cfg)
+    public function __construct(TemplatingFactory $templatingFactory, ConfigurationInterface $config)
     {
-        $this->cfg = $cfg;
+        $this->cfg = $config;
         $this->templating = $templatingFactory->getTemplating();
 
-        $userTemplates = $cfg->get('base_dir').'/'.$this->cfg->get('user_templates');
+        $userTemplates = $config->get('base_dir').'/'.$this->cfg->get('user_templates');
         $this->templating->registerTemplates($userTemplates);
 
-        $themeTemplates = $cfg->get('base_dir').'/'.$this->cfg->get('theme_folder').'/'.$this->cfg->get('theme');
+        $themeTemplates = $config->get('base_dir').'/'.$this->cfg->get('theme_folder').'/'.$this->cfg->get('theme');
         $this->templating->registerTemplates($themeTemplates, 'theme');
 
-        $systemTemplates = $cfg->get('base_dir').'/'.$this->cfg->get('system_templates');
+        $systemTemplates = $config->get('base_dir').'/'.$this->cfg->get('system_templates');
         $this->templating->registerTemplates($systemTemplates, 'system');
     }
 

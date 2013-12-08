@@ -6,7 +6,6 @@
         "symfony/yaml": "*",
         "twig/twig": "*",
         "symfony/console": "*",
-        "pimple/pimple": "*",
         "monolog/monolog": "*",
         "dflydev/markdown": "*",
         "kzykhys/ciconia": "~1.0.0"
