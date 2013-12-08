@@ -6,7 +6,11 @@ use Mihaeu\Odin\Resource\Resource;
 use Mihaeu\Odin\Configuration\ConfigurationInterface;
 
 /**
- * Class Container
+ * Container
+ *
+ * The container holds the configuration and all the resources. All processes operate on the container and
+ * its contents.
+ *
  * @package Mihaeu\Odin\Container
  * @author  Michael Haeuslmann <haeuslmann@gmail.com>
  */
@@ -30,11 +34,25 @@ class Container
         $this->setConfig($config);
     }
 
+    /**
+     * Updates the configuration.
+     *
+     * @todo Configuration items should either be changed directly or through the container, but not through both.
+     *
+     * @param ConfigurationInterface $config
+     */
     public function setConfig(ConfigurationInterface $config)
     {
         $this->config = $config;
     }
 
+    /**
+     * Adds a resource to the container, assuming it didn't exist before.
+     *
+     * @param Resource $resource
+     *
+     * @return bool
+     */
     public function addResource(Resource $resource)
     {
         if (empty($this->resources[$resource->getId()])) {
@@ -44,11 +62,40 @@ class Container
         return false;
     }
 
+    /**
+     * Adds an array of resources to the container.
+     *
+     * @param array $resources
+     *
+     * @return void
+     */
+    public function addResources(Array $resources)
+    {
+        foreach ($resources as $resource) {
+            $this->addResource($resource);
+        }
+    }
+
+    /**
+     * Adds a resource to the container or updates and existing one.
+     *
+     * @param string   $id md5 hashed id using content and uri (see Resource class)
+     * @param Resource $resource
+     *
+     * @return void
+     */
     public function setResource($id, Resource $resource)
     {
         $this->resources[$id] = $resource;
     }
 
+    /**
+     * Returns a resource from the container.
+     *
+     * @param string $id md5 hashed id using content and uri (see Resource class)
+     *
+     * @return bool
+     */
     public function getResource($id)
     {
         if (empty($this->resources[$id])) {
@@ -57,6 +104,13 @@ class Container
         return $this->resources[$id];
     }
 
+    /**
+     * Removes a resource from the container.
+     *
+     * @param string $id md5 hashed id using content and uri (see Resource class)
+     *
+     * @return bool
+     */
     public function removeResource($id)
     {
         if (empty($this->resources[$id])) {
@@ -66,11 +120,21 @@ class Container
         return true;
     }
 
+    /**
+     * Returns all resources.
+     *
+     * @return array
+     */
     public function getResources()
     {
         return $this->resources;
     }
 
+    /**
+     * Returns the flattened contents of the container for easier processing (e.g. templating).
+     *
+     * @return array
+     */
     public function getContainerArray()
     {
         $userResources = array_filter(
@@ -102,6 +166,13 @@ class Container
         ];
     }
 
+    /**
+     * Strips down and flattens a resource into an array.
+     *
+     * @param Resource $resource
+     *
+     * @return array
+     */
     public function flattenResource(Resource $resource)
     {
         return array_merge(
@@ -114,6 +185,15 @@ class Container
         );
     }
 
+    /**
+     * Flattens all resources.
+     *
+     * @see flattenResource()
+     *
+     * @param array $resources
+     *
+     * @return array
+     */
     public function flattenResources(Array $resources)
     {
         $flatResources = [];
@@ -123,6 +203,13 @@ class Container
         return $flatResources;
     }
 
+    /**
+     * Filters all resources for tags and returns a flattened array of the tags and their resources.
+     *
+     * @todo Extract filter class and add this functionality there.
+     *
+     * @return array
+     */
     public function getTags()
     {
         $tags = [];
@@ -144,6 +231,13 @@ class Container
         return $tags;
     }
 
+    /**
+     * Filters all resources for categories and returns a flattened array of the categories and their resources.
+     *
+     * @todo Extract filter class and add this functionality there.
+     *
+     * @return array
+     */
     public function getCategories()
     {
         $categories = [];
@@ -164,14 +258,7 @@ class Container
                 // no category
                 $categories['none'] = $flatResource;
             }
-        }{}
-        return $categories;
-    }
-
-    public function addResources(Array $resources)
-    {
-        foreach ($resources as $resource) {
-            $this->addResource($resource);
         }
+        return $categories;
     }
 }
