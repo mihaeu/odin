@@ -3,6 +3,7 @@
 namespace Mihaeu\Odin\Writer;
 
 use Mihaeu\Odin\Resource\Resource;
+use Mihaeu\Odin\Container\Container;
 use Mihaeu\Odin\Configuration\ConfigurationInterface;
 
 /**
@@ -50,35 +51,17 @@ class Writer
             $this->copyAssets();
         }
 
-        // determine destination, create folders, write content, ...
-        $outputPath = $this->findResourceDestination($resource);
-        $this->createResourceFolderStructure($outputPath);
-        $bytesWritten = file_put_contents($outputPath, $resource->content);
-
+        // create folder structure and write content
+        $this->createResourceFolderStructure($resource->meta['destination']);
+        $bytesWritten = file_put_contents($resource->meta['destination'], $resource->content);
         return $bytesWritten !== false;
     }
 
-    public function writeAll(Array $resources)
+    public function writeContainer(Container $container)
     {
-        foreach ($resources as $transformedResource) {
-            $this->write($transformedResource);
+        foreach ($container->getResources() as $resource) {
+            $this->write($resource);
         }
-    }
-
-    public function findResourceDestination(Resource &$resource)
-    {
-        // no slug defined, get one
-        if (empty($resource->meta['slug'])) {
-            $suffix = $this->config->get('pretty_urls') ? '/index.html' : '.html';
-            $slug = $this->createSlug($resource).$suffix;
-            $resource->meta['slug'] = $slug;
-        } else {
-            // local configuration always wins, so no changes if the slug
-            // has been specified
-            $slug = $resource->meta['slug'];
-        }
-
-        return $this->getOutputPath().'/'.$slug;
     }
 
     public function createResourceFolderStructure($destination)
@@ -93,6 +76,36 @@ class Writer
                 mkdir($folderStructure, 0777, true);
             }
         }
+    }
+
+    /**
+     * Copies all assets from the theme folder to the output folder;
+     *
+     * @todo copy user assets, not just theme assets, don't copy template files
+     */
+    public function copyAssets()
+    {
+        $themeFolder = $this->config->get('base_dir').'/'.$this->config->get('theme_folder').'/'.$this->config->get(
+            'theme'
+        );
+        $themeSubFolders = array_diff(scandir($themeFolder), ['.'], ['..']);
+        foreach ($themeSubFolders as $file) {
+            $folder = $themeFolder.'/'.$file;
+            if (is_dir($folder)) {
+                $this->copyFolder($folder, $this->getOutputPath().'/'.$file);
+            }
+        }
+        $this->assetsCopied = true;
+    }
+
+    /**
+     * @param $path string
+     *
+     * @return bool
+     */
+    public function outputPathValid($path)
+    {
+        return is_dir($path) && is_writable($path);
     }
 
     /**
@@ -128,99 +141,6 @@ class Writer
             }
         }
         return $this->outputPath;
-    }
-
-    /**
-     * Copies all assets from the theme folder to the output folder;
-     *
-     * @todo copy user assets, not just theme assets, don't copy template files
-     */
-    public function copyAssets()
-    {
-        $themeFolder = $this->config->get('base_dir').'/'.$this->config->get('theme_folder').'/'.$this->config->get('theme');
-        $themeSubFolders = array_diff(scandir($themeFolder), ['.'], ['..']);
-        foreach ($themeSubFolders as $file) {
-            $folder = $themeFolder.'/'.$file;
-            if (is_dir($folder)) {
-                $this->copyFolder($folder, $this->getOutputPath().'/'.$file);
-            }
-        }
-        $this->assetsCopied = true;
-    }
-
-
-    /**
-     * @param $path string
-     *
-     * @return bool
-     */
-    public function outputPathValid($path)
-    {
-        return is_dir($path) && is_writable($path);
-    }
-
-    /**
-     * Create a slug using the pattern from the configuration
-     *
-     * @todo pattern! take date from file modification if not set
-     *
-     * @param string $title
-     *
-     * @return string
-     */
-    public function createSlug(Resource $resource)
-    {
-        // title not set
-        if (empty($resource->meta['title'])) {
-            $basename = $resource->file->getBasename($resource->file->getExtension());
-            $resource->meta['title'] = $this->sluggify($basename);
-        }
-
-        // date not set
-        if (empty($resource->meta['date'])) {
-            $resource->meta['date'] = $resource->file->getMTime();
-        }
-
-        // preg split can remove beginning and trailing slashes
-        $pattern = $this->config->get('permalink_pattern');
-        $tokens = preg_split('/\//', $pattern, -1, PREG_SPLIT_NO_EMPTY);
-        $slugTokens = [];
-        $slugMatches = [
-            ':title' => $this->sluggify($resource->meta['title']),
-            ':Y'     => date('Y', $resource->meta['date']),
-            ':y'     => date('y', $resource->meta['date']),
-            ':m'     => date('m', $resource->meta['date']),
-            ':d'     => date('d', $resource->meta['date'])
-        ];
-        foreach ($tokens as $token) {
-            $slugTokens[] = isset($slugMatches[$token]) ? $slugMatches[$token] : $token;
-        }
-
-        return implode('/', $slugTokens);
-    }
-
-    /**
-     * Create a slug for nicer URLs.
-     *
-     * @see http://htmlblog.net/seo-friendly-url-in-php/
-     *
-     * @param $string
-     *
-     * @return string
-     */
-    public function sluggify($string)
-    {
-        $string = preg_replace("`\[.*\]`U", "", $string);
-        $string = preg_replace('`&(amp;)?#?[a-z0-9]+;`i', '-', $string);
-        $string = htmlentities($string, ENT_COMPAT, 'utf-8');
-        $string = preg_replace(
-            "`&([a-z])(acute|uml|circ|grave|ring|cedil|slash|tilde|caron|lig|quot|rsquo);`i",
-            "\\1",
-            $string
-        );
-        $string = preg_replace(array("`[^a-z0-9]`i", "`[-]+`"), "-", $string);
-
-        return strtolower(trim($string, '-'));
     }
 
     public function cleanOutputDirectory()

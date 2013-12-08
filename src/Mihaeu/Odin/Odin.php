@@ -57,7 +57,7 @@ EOT;
 
         $this['parser'] = $this->share(
             function () {
-                return new Parser\Parser(new ParserFactory());
+                return new Parser\Parser(new ParserFactory(), $this['config']);
             }
         );
 
@@ -75,7 +75,7 @@ EOT;
 
         $this['templating'] = $this->share(
             function () {
-                return new Templating\Templating(new TemplatingFactory(), $this['config'], $this['container']);
+                return new Templating\Templating(new TemplatingFactory(), $this['config']);
             }
         );
 

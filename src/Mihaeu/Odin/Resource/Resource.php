@@ -22,6 +22,11 @@ class Resource
     const CONTENT_TYPE_MARKDOWN = 3;
 
     /**
+     * var string
+     */
+    public $id;
+
+    /**
      * @var \SplFileInfo
      */
     public $file;
@@ -62,6 +67,14 @@ class Resource
         $this->file = $file;
         $this->type = $type;
         $this->content = file_get_contents($this->file->getRealPath());
+    }
+
+    public function getId()
+    {
+        if (empty($this->id)) {
+            $this->id = md5($this->file->getRealPath().file_get_contents($this->file->getRealPath()));
+        }
+        return $this->id;
     }
 
     /**

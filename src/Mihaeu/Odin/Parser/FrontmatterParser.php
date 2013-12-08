@@ -42,7 +42,7 @@ class FrontmatterParser implements ParserInterface
      *
      * @return array
      *
-     * @throws MetaParserException
+     * @throws ParserException
      */
     public function parse(Resource &$resource)
     {
@@ -58,7 +58,7 @@ class FrontmatterParser implements ParserInterface
             $resource->metaType = Resource::META_TYPE_FRONTMATTER;
             return Yaml::parse($tokens[0]);
         } else {
-            throw new MetaParserException();
+            throw new ParserException();
         }
     }
 }
