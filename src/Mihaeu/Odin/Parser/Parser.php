@@ -95,26 +95,7 @@ class Parser
     public function getOutputPath()
     {
         if ($this->outputPath === null) {
-            // maybe the path in the config is absolute e.g. /tmp/myblog
-            $absolutePath = $this->config->get('base_dir').'/'.$this->config->get('output_folder');
-
-            // or maybe it is relative to the project root e.g. output
-            $relativePath = $this->config->get('base_dir').'/'.$this->config->get('output_folder');
-
-            if ($this->outputPathValid($absolutePath)) {
-                $this->outputPath = $absolutePath;
-            } elseif ($this->outputPathValid($relativePath)) {
-                $this->outputPath = $relativePath;
-            } else {
-                // try creating the output folder
-                $directoryCreated = mkdir($relativePath, 0777, true);
-
-                if ($directoryCreated) {
-                    $this->outputPath = $relativePath;
-                } else {
-                    throw new WriterException('Output path does not exist or is not writable or could not be created.');
-                }
-            }
+            $this->outputPath = $this->config->get('output_folder');
         }
         return $this->outputPath;
     }

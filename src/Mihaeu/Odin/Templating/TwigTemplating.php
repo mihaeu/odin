@@ -14,18 +14,28 @@ class TwigTemplating implements TemplatingInterface
      */
     private $loader;
 
+    private $stringTwig;
+
     /**
      * @param array $options
      */
     public function __construct(Array $options = [])
     {
         $this->loader = new \Twig_Loader_Filesystem();
+        $stringLoader = new \Twig_Loader_String();
+
         $this->twig = new \Twig_Environment($this->loader, $options);
+        $this->stringTwig = new \Twig_Environment($stringLoader, $options);
     }
 
     public function renderTemplate($template, $data, $options = [])
     {
         return $this->twig->render($template, $data);
+    }
+
+    public function renderString($string, $data, $options = [])
+    {
+        return $this->stringTwig->render($string, $data);
     }
 
     /**

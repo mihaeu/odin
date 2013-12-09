@@ -35,6 +35,13 @@ class TwigTransformer implements TransformerInterface
         $twig = new \Twig_Environment(new \Twig_Loader_String());
 
         $resource->contentType = Resource::CONTENT_TYPE_TWIG;
-        return $twig->render($resource->content);
+
+        // do not parse standalone files at this stage
+        if (empty($resource->meta['standalone'])) {
+            $content = $twig->render($resource->content);
+        } else {
+            $content = $resource->content;
+        }
+        return $content;
     }
 }

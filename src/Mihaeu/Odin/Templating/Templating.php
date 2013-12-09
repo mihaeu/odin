@@ -21,23 +21,23 @@ class Templating
     /**
      * @var ConfigurationInterface
      */
-    private $cfg;
+    private $config;
 
     /**
      * Constructor.
      */
     public function __construct(TemplatingFactory $templatingFactory, ConfigurationInterface $config)
     {
-        $this->cfg = $config;
+        $this->config = $config;
         $this->templating = $templatingFactory->getTemplating();
 
-        $userTemplates = $config->get('base_dir').'/'.$this->cfg->get('user_templates');
+        $userTemplates = $this->config->get('user_templates');
         $this->templating->registerTemplates($userTemplates);
 
-        $themeTemplates = $config->get('base_dir').'/'.$this->cfg->get('theme_folder').'/'.$this->cfg->get('theme');
+        $themeTemplates = $this->config->get('theme');
         $this->templating->registerTemplates($themeTemplates, 'theme');
 
-        $systemTemplates = $config->get('base_dir').'/'.$this->cfg->get('system_templates');
+        $systemTemplates = $this->config->get('system_templates');
         $this->templating->registerTemplates($systemTemplates, 'system');
     }
 
@@ -48,14 +48,24 @@ class Templating
             // standalone resources do not not have a template, they are templates themselves and
             // have already been parsed as a resource
             if (empty($resource->meta['standalone'])) {
-                $template = $this->cfg->get('default_layout');
+                $template = $this->config->get('default_layout');
                 if (!empty($resource->meta['layout'])) {
                     $template = $resource->meta['layout'];
                 }
-
                 // render template using container and current resource
                 $resource->content = $this->templating->renderTemplate(
                     $template,
+                    array_merge(
+                        $containerArray,
+                        $resource->meta,
+                        [
+                            'content' => $resource->content,
+                        ]
+                    )
+                );
+            } else {
+                $resource->content = $this->templating->renderString(
+                    $resource->content,
                     array_merge(
                         $containerArray,
                         $resource->meta,
