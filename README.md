@@ -74,6 +74,12 @@ Therefore the file `2014-01-01-awesome-post.md` with the Frontmatter
 
 ## Todo
 
+- generators that produce content
+- bulletproof pathing
+- documentation
+- api generation
+- phpunit
+
 - pandoc support
 - setup wizard for odin and odin-plugins
 - different input formats

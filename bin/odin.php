@@ -3,7 +3,7 @@
 use Mihaeu\Odin\Odin;
 use Mihaeu\Odin\Resource\Resource;
 
-require __DIR__.'/vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
 $odin = new Odin;
 
