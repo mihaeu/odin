@@ -12,7 +12,7 @@ $config = $odin->get('config');
 
 $locator = $odin->get('locator');
 $userResources = $locator->locate($config->get('resource_folder'), Resource::TYPE_USER);
-$themeResources = $locator->locate($config->get('theme_folder').'/'.$config->get('theme'), Resource::TYPE_THEME);
+$themeResources = $locator->locate($config->get('theme_resource_folder'), Resource::TYPE_THEME);
 $systemResources = $locator->locate($config->get('system_resource_folder'), Resource::TYPE_SYSTEM);
 
 $container = $odin->get('container');
