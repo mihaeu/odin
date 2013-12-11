@@ -34,7 +34,7 @@ class Templating
         $userTemplates = $this->config->get('user_templates');
         $this->templating->registerTemplates($userTemplates);
 
-        $themeTemplates = $this->config->get('theme');
+        $themeTemplates = $this->config->get('theme_folder');
         $this->templating->registerTemplates($themeTemplates, 'theme');
 
         $systemTemplates = $this->config->get('system_templates');

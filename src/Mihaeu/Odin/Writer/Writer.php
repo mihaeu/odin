@@ -89,9 +89,9 @@ class Writer
     public function copyAssets()
     {
         $totalFilesizeCopied = 0;
-        $themeSubFolders = array_diff(scandir($this->config->get('theme')), ['.'], ['..']);
+        $themeSubFolders = array_diff(scandir($this->config->get('theme_folder')), ['.'], ['..']);
         foreach ($themeSubFolders as $file) {
-            $folder = $this->config->get('theme').'/'.$file;
+            $folder = $this->config->get('theme_folder').'/'.$file;
             if (is_dir($folder)) {
                 $totalFilesizeCopied += $this->copyFolder($folder, $this->getOutputPath().'/'.$file);
             }

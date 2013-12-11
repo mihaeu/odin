@@ -21,6 +21,41 @@ class Configuration implements ConfigurationInterface
     public function __construct(ConfigurationFactory $configFactory)
     {
         $this->config = $configFactory->getConfiguration();
+        $this->parseConfiguration();
+        $this->validate();
+    }
+
+    public function parseConfiguration()
+    {
+        // round #1 collect all references to other items e.g. %base_dir%
+        $replacements = [];
+        $referencingItems = [];
+        foreach ($this->getAll() as $key => $item) {
+            $matches = [];
+            if (!is_array($item) && preg_match_all('/%([a-zA-Z_\-]+)%+/', $item, $matches)) {
+                foreach ($matches[1] as $match) {
+                    if (empty($replacements["%$match%"])) {
+                        $replacements["%$match%"] = $this->get($match);
+                    }
+                }
+                $referencingItems[$key] = $item;
+            }
+        }
+
+        // round #2 dereference all keys, this way the order of the config items is not important
+        foreach ($referencingItems as $key => $item) {
+            $this->set($key, $this->dereferenceItem($item, $replacements));
+        }
+    }
+
+    public function dereferenceItem($value, $replacements)
+    {
+        $newValue = str_replace(array_keys($replacements), $replacements, $value);
+        if (preg_match('/%([a-zA-Z_\-]+)%/', $newValue)) {
+            return $this->dereferenceItem($newValue, $replacements);
+        } else {
+            return $newValue;
+        }
     }
 
     /**
@@ -54,8 +89,8 @@ class Configuration implements ConfigurationInterface
      */
     public function validate()
     {
-        $this->validateFolderExistsAndIsReadable('theme', 'theme_folder');
         $this->validateFolderExistsAndIsReadable('theme_folder');
+        $this->validateFolderExistsAndIsReadable('themes_folder');
         $this->validateFolderExistsAndIsReadable('resource_folder');
 //        $this->validateFolderExistsAndIsReadable('theme_resource_folder', 'theme_folder');
         $this->validateFolderExistsAndIsReadable('system_resource_folder');
