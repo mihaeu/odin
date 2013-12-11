@@ -24,7 +24,8 @@ class YamlConfiguration implements ConfigurationInterface
      */
     public function __construct()
     {
-        $this->config = YAML::parse('../config.yml');
+        $configFile = file_exists('config.yml') ? 'config.yml' : '../config.yml';
+        $this->config = YAML::parse($configFile);
     }
 
     /**
