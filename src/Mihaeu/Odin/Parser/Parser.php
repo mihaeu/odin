@@ -56,8 +56,20 @@ class Parser
         // the appropriate parser
         $metaParser = $this->parserFactory->getParser($resource);
         $resource->meta = $metaParser->parse($resource);
+        $this->checkAndFixMeta($resource);
         $this->findResourceDestination($resource);
         return $resource;
+    }
+
+    public function checkAndFixMeta(Resource &$resource)
+    {
+        if (empty($resource->meta['title'])) {
+            $resource->meta['title'] = $resource->file->getBasename('.'.$resource->file->getExtension());
+        }
+
+        if (empty($resource->meta['date'])) {
+            $resource->meta['date'] = $resource->file->getMTime();
+        }
     }
 
     public function parseContainer(Container &$container)

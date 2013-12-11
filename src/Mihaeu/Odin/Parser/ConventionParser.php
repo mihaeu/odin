@@ -27,9 +27,6 @@ class ConventionParser implements ParserInterface
             $date = \DateTime::createFromFormat('Y-m-d', $matches[1]);
             $meta['date'] = $date->getTimestamp();
             $meta['title'] = $matches[2];
-        } else {
-            $meta['title'] = $resource->file->getBasename('.'.$resource->file->getExtension());
-            $meta['date'] = $resource->file->getMTime();
         }
 
         $resource->metaType = Resource::META_TYPE_CONVENTION;

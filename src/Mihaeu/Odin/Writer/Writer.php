@@ -43,17 +43,20 @@ class Writer
     {
         // clean output dir if necessary
         if ($this->outputDirectoryClean === false) {
-            $this->cleanOutputDirectory();
+            $deletedFileCount = $this->cleanOutputDirectory();
+            printf("Cleaned output directory (deleted $deletedFileCount files).\n");
         }
 
         // copy assets if necessary
         if ($this->assetsCopied === false) {
-            $this->copyAssets();
+            $totalFilesizeCopied = $this->copyAssets();
+            printf("Copied assets (%d kb).\n\n", $totalFilesizeCopied / 1024);
         }
 
         // create folder structure and write content
         $this->createResourceFolderStructure($resource->meta['destination']);
         $bytesWritten = file_put_contents($resource->meta['destination'], $resource->content);
+        printf("Wrote \033[01;31m%s\033[0m to %s\n", $resource->meta['title'], str_replace($this->config->get('base_dir'), '', $resource->meta['destination']));
         return $bytesWritten !== false;
     }
 
@@ -85,14 +88,16 @@ class Writer
      */
     public function copyAssets()
     {
+        $totalFilesizeCopied = 0;
         $themeSubFolders = array_diff(scandir($this->config->get('theme')), ['.'], ['..']);
         foreach ($themeSubFolders as $file) {
             $folder = $this->config->get('theme').'/'.$file;
             if (is_dir($folder)) {
-                $this->copyFolder($folder, $this->getOutputPath().'/'.$file);
+                $totalFilesizeCopied += $this->copyFolder($folder, $this->getOutputPath().'/'.$file);
             }
         }
         $this->assetsCopied = true;
+        return $totalFilesizeCopied;
     }
 
     /**
@@ -123,8 +128,9 @@ class Writer
 
     public function cleanOutputDirectory()
     {
-        $this->rrmdir($this->getOutputPath(), false);
+        $deletedFileCount = $this->rrmdir($this->getOutputPath(), false);
         $this->outputDirectoryClean = true;
+        return $deletedFileCount;
     }
 
     /**
@@ -133,12 +139,13 @@ class Writer
      * @param string $dir
      * @param bool   $removeRoot
      */
-    public function rrmdir($dir, $removeRoot = false)
+    public function rrmdir($dir, $removeRoot = false, $count = 0)
     {
         foreach (glob($dir.'/*') as $file) {
             if (is_dir($file)) {
-                $this->rrmdir($file);
+                $count = $this->rrmdir($file, $removeRoot, $count);
             } else {
+                ++$count;
                 unlink($file);
             }
         }
@@ -146,25 +153,29 @@ class Writer
         if ($removeRoot) {
             rmdir($dir);
         }
+
+        return $count;
     }
 
     /**
      * @param $src string
      * @param $dst string
      */
-    public function copyFolder($src, $dst)
+    public function copyFolder($src, $dst, $totalFilesizeCopied = 0)
     {
         $dir = opendir($src);
         @mkdir($dst);
         while (false !== ($file = readdir($dir))) {
             if (($file != '.') && ($file != '..')) {
                 if (is_dir($src.'/'.$file)) {
-                    $this->copyFolder($src.'/'.$file, $dst.'/'.$file);
+                    $totalFilesizeCopied = $this->copyFolder($src.'/'.$file, $dst.'/'.$file, $totalFilesizeCopied);
                 } else {
                     copy($src.'/'.$file, $dst.'/'.$file);
+                    $totalFilesizeCopied += filesize($src.'/'.$file);
                 }
             }
         }
         closedir($dir);
+        return $totalFilesizeCopied;
     }
 }
