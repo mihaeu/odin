@@ -16,6 +16,7 @@ $odin = new Odin;
 
 $config = $odin->get('config');
 $config->set('base_dir', realpath(__DIR__.'/..'));
+$config->validate();
 
 $locator = $odin->get('locator');
 $userResources = $locator->locate($config->get('resource_folder'), Resource::TYPE_USER);

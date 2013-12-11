@@ -21,7 +21,6 @@ class Configuration implements ConfigurationInterface
     public function __construct(ConfigurationFactory $configFactory)
     {
         $this->config = $configFactory->getConfiguration();
-        $this->validate();
     }
 
     /**
