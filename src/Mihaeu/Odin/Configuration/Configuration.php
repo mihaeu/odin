@@ -22,6 +22,7 @@ class Configuration implements ConfigurationInterface
     {
         $this->config = $configFactory->getConfiguration();
         $this->parseConfiguration();
+        $this->validate();
     }
 
     public function parseConfiguration()
@@ -44,7 +45,6 @@ class Configuration implements ConfigurationInterface
         // round #2 dereference all keys, this way the order of the config items is not important
         foreach ($referencingItems as $key => $item) {
             $this->set($key, $this->dereferenceItem($item, $replacements));
-            ;
         }
     }
 
