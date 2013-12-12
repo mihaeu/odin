@@ -5,6 +5,7 @@ namespace Mihaeu\Odin\Writer;
 use Mihaeu\Odin\Resource\Resource;
 use Mihaeu\Odin\Container\Container;
 use Mihaeu\Odin\Configuration\ConfigurationInterface;
+use Mihaeu\Odin\Processor\ContainerProcessorInterface;
 
 /**
  * Class Writer
@@ -12,7 +13,7 @@ use Mihaeu\Odin\Configuration\ConfigurationInterface;
  * @package Mihaeu\Odin\Resource
  * @author  Michael Haeuslmann <haeuslmann@gmail.com>
  */
-class Writer
+class Writer implements ContainerProcessorInterface
 {
     /**
      * @var \Mihaeu\Odin\Configuration\ConfigurationInterface
@@ -37,6 +38,11 @@ class Writer
     public function __construct(ConfigurationInterface $config)
     {
         $this->config = $config;
+    }
+
+    public function process(Container &$container)
+    {
+        $this->writeContainer($container);
     }
 
     public function write(Resource $resource)

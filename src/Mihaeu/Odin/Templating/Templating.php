@@ -2,16 +2,16 @@
 
 namespace Mihaeu\Odin\Templating;
 
-use Mihaeu\Odin\Resource\Resource;
 use Mihaeu\Odin\Configuration\ConfigurationInterface;
 use Mihaeu\Odin\Container\Container;
+use Mihaeu\Odin\Processor\ContainerProcessorInterface;
 
 /**
  * Class Templating
  * @package Mihaeu\Odin\Templating
  * @author  Michael Haeuslmann <haeuslmann@gmail.com>
  */
-class Templating
+class Templating implements ContainerProcessorInterface
 {
     /**
      * @var TemplatingInterface
@@ -39,6 +39,11 @@ class Templating
 
         $systemTemplates = $this->config->get('system_templates');
         $this->templating->registerTemplates($systemTemplates, 'system');
+    }
+
+    public function process(Container &$container)
+    {
+        $this->renderContainer($container);
     }
 
     public function renderContainer(Container &$container)

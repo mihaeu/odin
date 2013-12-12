@@ -18,9 +18,9 @@ $systemResources = $locator->locate($config->get('system_resource_folder'), Reso
 $container = $odin->get('container');
 $container->addResources(array_merge($userResources, $themeResources, $systemResources));
 
-$odin->get('parser')->parseContainer($container);
-$odin->get('transformer')->transformContainer($container);
-$odin->get('templating')->renderContainer($container);
-$odin->get('writer')->writeContainer($container);
+$odin->get('parser')->process($container);
+$odin->get('transformer')->process($container);
+$odin->get('templating')->process($container);
+$odin->get('writer')->process($container);
 
 //var_dump($config->getAll());

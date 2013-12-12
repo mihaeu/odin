@@ -3,6 +3,7 @@
 namespace Mihaeu\Odin\Parser;
 
 use dflydev\markdown\MarkdownExtraParser;
+use Mihaeu\Odin\Processor\ContainerProcessorInterface;
 use Mihaeu\Odin\Resource\Resource;
 use Mihaeu\Odin\Container\Container;
 use Mihaeu\Odin\Configuration\ConfigurationInterface;
@@ -15,7 +16,7 @@ use Mihaeu\Odin\Writer\WriterException;
  * @package Mihaeu\Odin\Resource
  * @author  Michael Haeuslmann <haeuslmann@gmail.com>
  */
-class Parser
+class Parser implements ContainerProcessorInterface
 {
     private $parserFactory;
 
@@ -27,6 +28,11 @@ class Parser
     {
         $this->parserFactory = $parserFactory;
         $this->config = $config;
+    }
+
+    public function process(Container &$container)
+    {
+        $this->parseContainer($container);
     }
 
     /**
