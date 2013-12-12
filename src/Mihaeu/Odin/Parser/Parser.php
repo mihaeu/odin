@@ -32,7 +32,10 @@ class Parser implements ContainerProcessorInterface
 
     public function process(Container &$container)
     {
-        $this->parseContainer($container);
+        foreach ($container->getResources() as $resource) {
+            $resource = $this->parse($resource);
+            $container->setResource($resource->getId(), $resource);
+        }
     }
 
     /**
@@ -75,14 +78,6 @@ class Parser implements ContainerProcessorInterface
 
         if (empty($resource->meta['date'])) {
             $resource->meta['date'] = $resource->file->getMTime();
-        }
-    }
-
-    public function parseContainer(Container &$container)
-    {
-        foreach ($container->getResources() as $resource) {
-            $resource = $this->parse($resource);
-            $container->setResource($resource->getId(), $resource);
         }
     }
 

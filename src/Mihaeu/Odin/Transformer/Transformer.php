@@ -21,7 +21,10 @@ class Transformer implements ContainerProcessorInterface
 
     public function process(Container &$container)
     {
-        $this->transformContainer($container);
+        foreach ($container->getResources() as $resource) {
+            $resource = $this->transform($resource);
+            $container->setResource($resource->getId(), $resource);
+        }
     }
 
     /**
@@ -43,13 +46,5 @@ class Transformer implements ContainerProcessorInterface
         $contentTransformer = $this->transformerFactory->getTransformer($resource);
         $resource->content = $contentTransformer->transform($resource);
         return $resource;
-    }
-
-    public function transformContainer(Container &$container)
-    {
-        foreach ($container->getResources() as $resource) {
-            $resource = $this->transform($resource);
-            $container->setResource($resource->getId(), $resource);
-        }
     }
 }

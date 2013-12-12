@@ -43,11 +43,6 @@ class Templating implements ContainerProcessorInterface
 
     public function process(Container &$container)
     {
-        $this->renderContainer($container);
-    }
-
-    public function renderContainer(Container &$container)
-    {
         $containerArray = $container->getContainerArray();
         foreach ($container->getResources() as $resource) {
             // standalone resources do not not have a template, they are templates themselves and

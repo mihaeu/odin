@@ -42,7 +42,9 @@ class Writer implements ContainerProcessorInterface
 
     public function process(Container &$container)
     {
-        $this->writeContainer($container);
+        foreach ($container->getResources() as $resource) {
+            $this->write($resource);
+        }
     }
 
     public function write(Resource $resource)
@@ -62,15 +64,12 @@ class Writer implements ContainerProcessorInterface
         // create folder structure and write content
         $this->createResourceFolderStructure($resource->meta['destination']);
         $bytesWritten = file_put_contents($resource->meta['destination'], $resource->content);
-        printf("Wrote \033[01;31m%s\033[0m to %s\n", $resource->meta['title'], str_replace($this->config->get('base_dir'), '', $resource->meta['destination']));
+        printf(
+            "Wrote \033[01;31m%s\033[0m to %s\n",
+            $resource->meta['title'],
+            str_replace($this->config->get('base_dir'), '', $resource->meta['destination'])
+        );
         return $bytesWritten !== false;
-    }
-
-    public function writeContainer(Container $container)
-    {
-        foreach ($container->getResources() as $resource) {
-            $this->write($resource);
-        }
     }
 
     public function createResourceFolderStructure($destination)
