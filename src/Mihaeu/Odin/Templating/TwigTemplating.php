@@ -29,12 +29,12 @@ class TwigTemplating implements TemplatingInterface
         $this->stringTwig = new \Twig_Environment($stringLoader, $options);
     }
 
-    public function renderTemplate($template, $data, $options = [])
+    public function renderTemplate($template, $data = [], $options = [])
     {
         return $this->twig->render($template, $data);
     }
 
-    public function renderString($string, $data, $options = [])
+    public function renderString($string, $data = [], $options = [])
     {
         return $this->stringTwig->render($string, $data);
     }
