@@ -218,14 +218,14 @@ class Container
             if (isset($resource->meta['tags']) && is_array($resource->meta['tags'])) {
                 // multiple tags
                 foreach ($resource->meta['tags'] as $tag) {
-                    $tags[$tag] = $flatResource;
+                    $tags[$tag][] = $flatResource;
                 }
             } elseif (isset($resource->meta['tags'])) {
                 // only one tag
-                $tags[$resource->meta['tags']] = $flatResource;
+                $tags[$resource->meta['tags']][] = $flatResource;
             } elseif (isset($resource->meta['tag'])) {
                 // only one tag
-                $tags[$resource->meta['tag']] = $flatResource;
+                $tags[$resource->meta['tag']][] = $flatResource;
             }
         }
         return $tags;
@@ -246,17 +246,17 @@ class Container
             if (isset($resource->meta['categories']) && is_array($resource->meta['categories'])) {
                 // multiple categories
                 foreach ($resource->meta['categories'] as $category) {
-                    $categories[$category] = $flatResource;
+                    $categories[$category][] = $flatResource;
                 }
             } elseif (isset($resource->meta['categories'])) {
                 // only one category
-                $categories[$resource->meta['categories']] = $flatResource;
+                $categories[$resource->meta['categories']][] = $flatResource;
             } elseif (isset($resource->meta['category'])) {
                 // only one category
-                $categories[$resource->meta['category']] = $flatResource;
+                $categories[$resource->meta['category']][] = $flatResource;
             } else {
                 // no category
-                $categories['none'] = $flatResource;
+                $categories['none'][] = $flatResource;
             }
         }
         return $categories;
