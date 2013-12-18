@@ -1,23 +1,23 @@
 #=================================================================================================#
 # Basic Settings                                                                                  #
 #=================================================================================================#
-title: Example Blog
-subtitle: This is just the beginning ... example.
-description: This blog is all about giving examples.
+title: {{ title|default("Example Blog") }}
+subtitle: {{ subtitle|default("This is just the beginning ... example.") }}
+description: {{ description|default("This blog is all about giving examples.")}}
 
 #=================================================================================================#
 # URL                                                                                             #
 #-------------------------------------------------------------------------------------------------#
 # Please provide the URL to your blog without a trailing slash.                                   #
 #=================================================================================================#
-url: http://localhost:8080
+url: {{ url|default("http://localhost:8080") }}
 
 #=================================================================================================#
 # Authors                                                                                         #
 #-------------------------------------------------------------------------------------------------#
 # Authors are optional, but will be used for humans.txt, copyright, footer, post meta data etc.   #
 #=================================================================================================#
-author: William Shakespear
+author: {{ author|default("William Shakespear") }}
 authors:
 - {name: William Shakespear, email: "shakespear@gmail.com", twitter: shakeit, from: "London, England"}
 
@@ -27,7 +27,7 @@ authors:
 # Default date throughout the blog. You can override this everywhere in your templates by using   #
 # Twigs date() function. (see: twig.sensiolabs.org/doc/functions/date.html)                       #
 #=================================================================================================#
-date_format: d.m.Y
+date_format: {{ date_format|default("d.m.Y") }}
 
 #=================================================================================================#
 # Permalink Pattern                                                                               #
@@ -36,7 +36,7 @@ date_format: d.m.Y
 #                                                                                                 #
 # e.g. /blog/:Y/:m/:title will produce something like /blog/2014/01/awesome-post                  #
 #=================================================================================================#
-permalink_pattern: /:title/
+permalink_pattern: {{ permalink_pattern|default("/:title/") }}
 
 #=================================================================================================#
 # Pretty URLs                                                                                     #
@@ -47,7 +47,7 @@ permalink_pattern: /:title/
 #                                                                                                 #
 # so the link will be: /awesome-post instead of /awesome-post.html                                #
 #=================================================================================================#
-pretty_urls: true
+pretty_urls: {{ pretty_urls|default("true")}}
 
 #=================================================================================================#
 # Extra Resources                                                                                 #
@@ -64,8 +64,8 @@ create_humans_txt: true
 #-------------------------------------------------------------------------------------------------#
 #                                                                                                 #
 #=================================================================================================#
-theme: default
-default_layout: @theme/index.html.twig
+theme: {{ theme|default("default") }}
+default_layout: {{ default_layout|default("@theme/index.html.twig") }}
 
 #=================================================================================================#
 # File Structure                                                                                  #
