@@ -4,9 +4,10 @@ namespace Mihaeu\Odin\Transformer;
 
 use Mihaeu\Odin\Resource\Resource;
 use Mihaeu\Odin\Container\Container;
+use Mihaeu\Odin\Processor\ContainerProcessorInterface;
 use dflydev\markdown\MarkdownExtraParser;
 
-class Transformer
+class Transformer implements ContainerProcessorInterface
 {
     /**
      * @var TransformerFactory
@@ -16,6 +17,14 @@ class Transformer
     public function __construct(TransformerFactory $transformerFactory)
     {
         $this->transformerFactory = $transformerFactory;
+    }
+
+    public function process(Container &$container)
+    {
+        foreach ($container->getResources() as $resource) {
+            $resource = $this->transform($resource);
+            $container->setResource($resource->getId(), $resource);
+        }
     }
 
     /**
@@ -37,13 +46,5 @@ class Transformer
         $contentTransformer = $this->transformerFactory->getTransformer($resource);
         $resource->content = $contentTransformer->transform($resource);
         return $resource;
-    }
-
-    public function transformContainer(Container &$container)
-    {
-        foreach ($container->getResources() as $resource) {
-            $resource = $this->transform($resource);
-            $container->setResource($resource->getId(), $resource);
-        }
     }
 }

@@ -5,6 +5,7 @@ namespace Mihaeu\Odin\Writer;
 use Mihaeu\Odin\Resource\Resource;
 use Mihaeu\Odin\Container\Container;
 use Mihaeu\Odin\Configuration\ConfigurationInterface;
+use Mihaeu\Odin\Processor\ContainerProcessorInterface;
 
 /**
  * Class Writer
@@ -12,7 +13,7 @@ use Mihaeu\Odin\Configuration\ConfigurationInterface;
  * @package Mihaeu\Odin\Resource
  * @author  Michael Haeuslmann <haeuslmann@gmail.com>
  */
-class Writer
+class Writer implements ContainerProcessorInterface
 {
     /**
      * @var \Mihaeu\Odin\Configuration\ConfigurationInterface
@@ -39,6 +40,13 @@ class Writer
         $this->config = $config;
     }
 
+    public function process(Container &$container)
+    {
+        foreach ($container->getResources() as $resource) {
+            $this->write($resource);
+        }
+    }
+
     public function write(Resource $resource)
     {
         // clean output dir if necessary
@@ -56,15 +64,12 @@ class Writer
         // create folder structure and write content
         $this->createResourceFolderStructure($resource->meta['destination']);
         $bytesWritten = file_put_contents($resource->meta['destination'], $resource->content);
-        printf("Wrote \033[01;31m%s\033[0m to %s\n", $resource->meta['title'], str_replace($this->config->get('base_dir'), '', $resource->meta['destination']));
+        printf(
+            "Wrote \033[01;31m%s\033[0m to %s\n",
+            $resource->meta['title'],
+            str_replace($this->config->get('base_dir'), '', $resource->meta['destination'])
+        );
         return $bytesWritten !== false;
-    }
-
-    public function writeContainer(Container $container)
-    {
-        foreach ($container->getResources() as $resource) {
-            $this->write($resource);
-        }
     }
 
     public function createResourceFolderStructure($destination)

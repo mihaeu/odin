@@ -21,17 +21,13 @@ class YamlConfiguration implements ConfigurationInterface
      * Constructor parses the YAML configuration.
      *
      * @todo Check if YAML throws an exception and log.
+     *
+     * @param string $pathToConfig
      */
-    public function __construct()
+    public function __construct($pathToConfig)
     {
-//        $configFile = file_exists('config.yml') ? 'config.yml' : '../config.yml';
-
-        // since this project depends on composer and the composer ClassLoader is
-        // always in the same directory, we can use Reflection to find its
-        // location and the base directory located two levels below
-        $reflector = new \ReflectionClass('Composer\Autoload\ClassLoader');
-        $configDirectory = realpath(dirname($reflector->getFileName()).'/../..');
-        $this->config = YAML::parse($configDirectory.'/config.yml');
+//      $configFile = file_exists('config.yml') ? 'config.yml' : '../config.yml';
+        $this->config = YAML::parse($pathToConfig.'/config.yml');
     }
 
     /**

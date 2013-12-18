@@ -22,9 +22,10 @@ class TwigTemplating implements TemplatingInterface
     public function __construct(Array $options = [])
     {
         $this->loader = new \Twig_Loader_Filesystem();
-        $stringLoader = new \Twig_Loader_String();
-
         $this->twig = new \Twig_Environment($this->loader, $options);
+        $this->twig->addExtension(new \Twig_Extension_Debug());
+
+        $stringLoader = new \Twig_Loader_String();
         $this->stringTwig = new \Twig_Environment($stringLoader, $options);
     }
 

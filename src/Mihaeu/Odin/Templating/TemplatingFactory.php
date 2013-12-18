@@ -13,6 +13,6 @@ class TemplatingFactory
 {
     public function getTemplating()
     {
-        return new TwigTemplating(['autoescape' => false]);
+        return new TwigTemplating(['autoescape' => false, 'debug' => true]);
     }
 }
