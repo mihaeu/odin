@@ -50,6 +50,9 @@ class Odin
         $di->params['Mihaeu\Odin\Writer\Writer'] = [
             'config' => $di->lazyGet('config')
         ];
+        $di->params['Mihaeu\Odin\Bootstrap\Bootstrap'] = [
+            'templatingFactory' => $di->lazyGet('templatingFactory')
+        ];
 
         $di->set('config', $di->lazyNew('Mihaeu\Odin\Configuration\Configuration'));
         $di->set('locator', $di->lazyNew('Mihaeu\Odin\Locator\Locator'));
@@ -58,6 +61,7 @@ class Odin
         $di->set('transformer', $di->lazyNew('Mihaeu\Odin\Transformer\Transformer'));
         $di->set('templating', $di->lazyNew('Mihaeu\Odin\Templating\Templating'));
         $di->set('writer', $di->lazyNew('Mihaeu\Odin\Writer\Writer'));
+        $di->set('bootstrap', $di->lazyNew('Mihaeu\Odin\Bootstrap\Bootstrap'));
 
         $di->set('configFactory', $di->lazyNew('Mihaeu\Odin\Configuration\ConfigurationFactory'));
         $di->set('parserFactory', $di->lazyNew('Mihaeu\Odin\Parser\ParserFactory'));

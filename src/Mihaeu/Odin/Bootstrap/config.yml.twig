@@ -1,0 +1,92 @@
+#=================================================================================================#
+# Basic Settings                                                                                  #
+#=================================================================================================#
+title: Example Blog
+subtitle: This is just the beginning ... example.
+description: This blog is all about giving examples.
+
+#=================================================================================================#
+# URL                                                                                             #
+#-------------------------------------------------------------------------------------------------#
+# Please provide the URL to your blog without a trailing slash.                                   #
+#=================================================================================================#
+url: http://localhost:8080
+
+#=================================================================================================#
+# Authors                                                                                         #
+#-------------------------------------------------------------------------------------------------#
+# Authors are optional, but will be used for humans.txt, copyright, footer, post meta data etc.   #
+#=================================================================================================#
+author: William Shakespear
+authors:
+- {name: William Shakespear, email: "shakespear@gmail.com", twitter: shakeit, from: "London, England"}
+
+#=================================================================================================#
+# Date Format                                                                                     #
+#-------------------------------------------------------------------------------------------------#
+# Default date throughout the blog. You can override this everywhere in your templates by using   #
+# Twigs date() function. (see: twig.sensiolabs.org/doc/functions/date.html)                       #
+#=================================================================================================#
+date_format: d.m.Y
+
+#=================================================================================================#
+# Permalink Pattern                                                                               #
+#-------------------------------------------------------------------------------------------------#
+# options: :title :Y :y :m :d                                                                     #
+#                                                                                                 #
+# e.g. /blog/:Y/:m/:title will produce something like /blog/2014/01/awesome-post                  #
+#=================================================================================================#
+permalink_pattern: /:title/
+
+#=================================================================================================#
+# Pretty URLs                                                                                     #
+#-------------------------------------------------------------------------------------------------#
+# If true will create a file structure like                                                       #
+#                                                                                                 #
+# /awesome-post/index.html                                                                        #
+#                                                                                                 #
+# so the link will be: /awesome-post instead of /awesome-post.html                                #
+#=================================================================================================#
+pretty_urls: true
+
+#=================================================================================================#
+# Extra Resources                                                                                 #
+#-------------------------------------------------------------------------------------------------#
+# Odin will create these extra resources from a default template for you. Activating this is      #
+# highly recommended for SEO.                                                                     #
+#=================================================================================================#
+create_sitemap_xml: true
+create_robots_txt: true
+create_humans_txt: true
+
+#=================================================================================================#
+# Theme Configuration                                                                             #
+#-------------------------------------------------------------------------------------------------#
+#                                                                                                 #
+#=================================================================================================#
+theme: default
+default_layout: @theme/index.html.twig
+
+#=================================================================================================#
+# File Structure                                                                                  #
+#-------------------------------------------------------------------------------------------------#
+#                                                                                                 #
+#=================================================================================================#
+base_dir: {{ base_dir }}
+project_dir: {{ project_dir }}
+
+output_folder: %project_dir%/output
+themes_folder: %base_dir%/themes
+resource_folder: %project_dir%/content
+
+#resources:
+#  posts: %resource_folder%/posts
+#  pages: %resource_folder%/pages
+
+theme_folder: %themes_folder%/%theme%
+theme_resource_folder: %theme_folder%/resources
+system_resource_folder: %base_dir%/default_templates
+system_templates: %base_dir%/default_templates
+user_templates: %resource_folder%/layouts
+
+resource_extensions: [md,markdown,twig,html,xhtml,rst,txt,xml]

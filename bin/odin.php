@@ -8,6 +8,8 @@ require __DIR__.'/../vendor/autoload.php';
 $odin = new Odin;
 echo $odin->signature."\n\n";
 
+$odin->get('bootstrap')->checkAndResolveRequirements();
+
 $config = $odin->get('config');
 
 $locator = $odin->get('locator');
