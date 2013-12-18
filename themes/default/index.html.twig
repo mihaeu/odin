@@ -48,11 +48,13 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                {% for resource in resources %}
-                    <li>
-                        <a href="{{ site.url }}/{{ resource.slug }}">{{ resource.title }}</a>
-                    </li>
-                {% endfor %}
+                {% block navigation %}
+                    {% for resource in resources %}
+                        <li>
+                            <a href="{{ site.url }}/{{ resource.slug }}">{{ resource.title }}</a>
+                        </li>
+                    {% endfor %}
+                {% endblock %}
             </ul>
         </div><!--/.nav-collapse -->
     </div>
