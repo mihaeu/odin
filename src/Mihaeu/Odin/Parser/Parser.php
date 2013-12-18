@@ -85,12 +85,19 @@ class Parser implements ContainerProcessorInterface
     {
         // no slug defined, get one
         if (empty($resource->meta['slug'])) {
-            $suffix = $this->config->get('pretty_urls') ? '/index.html' : '.html';
-            $slug = $this->createSlug($resource).$suffix;
-            $resource->meta['slug'] = $slug;
+            $resource->meta['slug'] = str_replace('index.html', '', $this->createSlug($resource));
         }
-        $destination = $this->getOutputPath().'/'.$resource->meta['slug'];
-        $resource->meta['slug'] = str_replace('index.html', '', $resource->meta['slug']);
+
+        // start page
+        if (preg_match('/\.\w+$/', $resource->meta['slug'])) {
+            $suffix = '';
+        } elseif ($this->config->get('pretty_urls')) {
+            $suffix = '/index.html';
+        } else {
+            $suffix = '.html';
+        }
+        $destination = $this->getOutputPath().'/'.$resource->meta['slug'].$suffix;
+
         $resource->meta['slug'] = rtrim($resource->meta['slug'], '/');
         $resource->meta['destination'] = $destination;
 

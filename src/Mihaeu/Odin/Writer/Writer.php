@@ -74,15 +74,8 @@ class Writer implements ContainerProcessorInterface
 
     public function createResourceFolderStructure($destination)
     {
-        $tokens = explode('/', $destination);
-
-        // if e.g. slug = blog/beginning/first-post.html
-        // create folder blog and blog/beginning, otherwise, create nothing
-        if (count($tokens) > 1) {
-            $folderStructure = implode('/', array_splice($tokens, 0, -1));
-            if (!file_exists($folderStructure)) {
-                mkdir($folderStructure, 0777, true);
-            }
+        if (!file_exists(dirname($destination))) {
+            mkdir(dirname($destination), 0777, true);
         }
     }
 

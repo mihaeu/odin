@@ -33,13 +33,16 @@ class Bootstrap
     public function resolveRequirements()
     {
         $projectDir = getcwd();
+        echo "Bootstrapping app ...\n";
 
         if (!file_exists("$projectDir/content")) {
             mkdir("$projectDir/content");
+            echo "Creating content directory ...\n";
         }
 
         if (!file_exists("$projectDir/output")) {
             mkdir("$projectDir/output");
+            echo "Creating output directory ...\n";
         }
 
         if (!file_exists("$projectDir/config.yml")) {
@@ -49,6 +52,7 @@ class Bootstrap
             ];
             $config = $this->templating->renderTemplate('config.yml.twig', $data);
             file_put_contents("$projectDir/config.yml", $config);
+            echo "Creating config file ...\n";
         }
     }
 
