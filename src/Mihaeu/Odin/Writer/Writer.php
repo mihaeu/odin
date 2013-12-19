@@ -35,6 +35,11 @@ class Writer implements ContainerProcessorInterface
      */
     private $outputDirectoryClean = false;
 
+    /**
+     * @var array
+     */
+    private $info = [];
+
     public function __construct(ConfigurationInterface $config)
     {
         $this->config = $config;
@@ -52,20 +57,20 @@ class Writer implements ContainerProcessorInterface
         // clean output dir if necessary
         if ($this->outputDirectoryClean === false) {
             $deletedFileCount = $this->cleanOutputDirectory();
-            printf("Cleaned output directory (deleted $deletedFileCount files).\n");
+            $this->info['output_cleaned'] = sprintf("Cleaned output directory (deleted $deletedFileCount files).");
         }
 
         // copy assets if necessary
         if ($this->assetsCopied === false) {
             $totalFilesizeCopied = $this->copyAssets();
-            printf("Copied assets (%d kb).\n\n", $totalFilesizeCopied / 1024);
+            $this->info['assets_copied'] = sprintf("Copied assets (~%d kb).", ceil($totalFilesizeCopied / 1024));
         }
 
         // create folder structure and write content
         $this->createResourceFolderStructure($resource->meta['destination']);
         $bytesWritten = file_put_contents($resource->meta['destination'], $resource->content);
-        printf(
-            "Wrote \033[01;31m%s\033[0m to %s\n",
+        $this->info['resources_written'][] = sprintf(
+            "Wrote \033[01;31m%s\033[0m to %s",
             $resource->meta['title'],
             str_replace($this->config->get('base_dir'), '', $resource->meta['destination'])
         );
@@ -86,13 +91,25 @@ class Writer implements ContainerProcessorInterface
      */
     public function copyAssets()
     {
+        // filter out ignored assets like bower and ignore linux . and ..
+        $themeAssetPath = $this->config->get('theme_assets');
+        if (!is_dir($themeAssetPath)) {
+            $this->assetsCopied = true;
+            return 0;
+        }
+
+        $themeAssets = array_diff(
+            scandir($themeAssetPath),
+            $this->config->get('ignore_assets'),
+            ['.', '..']
+        );
+
         $totalFilesizeCopied = 0;
-        $themeSubFolders = array_diff(scandir($this->config->get('theme_folder')), ['.'], ['..']);
-        foreach ($themeSubFolders as $file) {
-            $folder = $this->config->get('theme_folder').'/'.$file;
-            if (is_dir($folder)) {
-                $totalFilesizeCopied += $this->copyFolder($folder, $this->getOutputPath().'/'.$file);
-            }
+        foreach ($themeAssets as $asset) {
+            $totalFilesizeCopied += $this->copyFolder(
+                $themeAssetPath.DIRECTORY_SEPARATOR.$asset,
+                $this->getOutputPath().DIRECTORY_SEPARATOR.basename($themeAssetPath).DIRECTORY_SEPARATOR.$asset
+            );
         }
         $this->assetsCopied = true;
         return $totalFilesizeCopied;
@@ -137,14 +154,15 @@ class Writer implements ContainerProcessorInterface
      * @param string $dir
      * @param bool   $removeRoot
      */
-    public function rrmdir($dir, $removeRoot = false, $count = 0)
+    public function rrmdir($dir, $removeRoot = false)
     {
-        foreach (glob($dir.'/*') as $file) {
-            if (is_dir($file)) {
-                $count = $this->rrmdir($file, $removeRoot, $count);
+        $count = 0;
+        foreach (array_diff(scandir($dir), ['.', '..']) as $file) {
+            if (is_dir($dir.DIRECTORY_SEPARATOR.$file)) {
+                $count += $this->rrmdir($dir.DIRECTORY_SEPARATOR.$file, $removeRoot);
             } else {
                 ++$count;
-                unlink($file);
+                unlink($dir.DIRECTORY_SEPARATOR.$file);
             }
         }
 
@@ -159,21 +177,54 @@ class Writer implements ContainerProcessorInterface
      * @param $src string
      * @param $dst string
      */
-    public function copyFolder($src, $dst, $totalFilesizeCopied = 0)
+    public function copyFolder($src, $dst)
     {
+        if (is_file($src)) {
+            if (!is_dir(dirname($dst))) {
+                mkdir(dirname($dst));
+            }
+
+            copy($src, $dst);
+            return filesize($src);
+        }
+
+        $totalFilesizeCopied = 0;
         $dir = opendir($src);
-        @mkdir($dst);
+        @mkdir($dst, 0777, true);
         while (false !== ($file = readdir($dir))) {
             if (($file != '.') && ($file != '..')) {
-                if (is_dir($src.'/'.$file)) {
-                    $totalFilesizeCopied = $this->copyFolder($src.'/'.$file, $dst.'/'.$file, $totalFilesizeCopied);
+                if (is_dir($src.DIRECTORY_SEPARATOR.$file)) {
+                    $totalFilesizeCopied += $this->copyFolder($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file, $totalFilesizeCopied);
                 } else {
-                    copy($src.'/'.$file, $dst.'/'.$file);
-                    $totalFilesizeCopied += filesize($src.'/'.$file);
+                    copy($src.DIRECTORY_SEPARATOR.$file, $dst.DIRECTORY_SEPARATOR.$file);
+                    $totalFilesizeCopied += filesize($src.DIRECTORY_SEPARATOR.$file);
                 }
             }
         }
         closedir($dir);
         return $totalFilesizeCopied;
+    }
+
+    /**
+     * Returns information about the writing process.
+     *
+     * @param string $key
+     *
+     * @return array
+     */
+    public function getInfo($key = '')
+    {
+        // no key specified
+        if (empty($key)) {
+            return $this->info;
+        }
+
+        // key legal
+        if (isset($this->info[$key])) {
+            return $this->info[$key];
+        }
+
+        // no info
+        return '';
     }
 }

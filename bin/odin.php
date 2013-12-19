@@ -6,8 +6,6 @@ use Mihaeu\Odin\Resource\Resource;
 require __DIR__.'/../vendor/autoload.php';
 
 $odin = new Odin;
-echo $odin->signature."\n\n";
-
 $odin->get('bootstrap')->checkAndResolveRequirements();
 
 $config = $odin->get('config');
@@ -23,6 +21,15 @@ $container->addResources(array_merge($userResources, $themeResources, $systemRes
 $odin->get('parser')->process($container);
 $odin->get('transformer')->process($container);
 $odin->get('templating')->process($container);
-$odin->get('writer')->process($container);
+$writer = $odin->get('writer');
+$writer->process($container);
+
+printf(
+    "%s\n\n%s\n%s\n\n%s\n",
+    $odin->signature,
+    $writer->getInfo('output_cleaned'),
+    $writer->getInfo('assets_copied'),
+    implode("\n", $writer->getInfo('resources_written'))
+);
 
 //var_dump($config->getAll());
