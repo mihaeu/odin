@@ -66,23 +66,21 @@ create_humans_txt: true
 #=================================================================================================#
 theme: {{ theme|default("default") }}
 default_layout: {{ default_layout|default("@theme/index.html.twig") }}
+theme_assets: {{ theme_assets|default("%theme_folder%/assets") }}
+ignore_assets: {{ ignore_assets|default("[bower_components, node_modules]") }}
 
 #=================================================================================================#
 # File Structure                                                                                  #
 #-------------------------------------------------------------------------------------------------#
 #                                                                                                 #
 #=================================================================================================#
-base_dir: {{ base_dir }}
-project_dir: {{ project_dir }}
 
+project_dir: {{ project_dir }}
 output_folder: %project_dir%/output
-themes_folder: %base_dir%/themes
 resource_folder: %project_dir%/content
 
-#resources:
-#  posts: %resource_folder%/posts
-#  pages: %resource_folder%/pages
-
+base_dir: {{ base_dir }}
+themes_folder: %base_dir%/themes
 theme_folder: %themes_folder%/%theme%
 theme_resource_folder: %theme_folder%/resources
 system_resource_folder: %base_dir%/default_templates
