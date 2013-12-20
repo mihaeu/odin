@@ -5,6 +5,12 @@ use Mihaeu\Odin\Resource\Resource;
 
 require __DIR__.'/../vendor/autoload.php';
 
+// temporary solution to handle external calls
+$option = getopt('', ['dir::']);
+if ($option !== false && isset($option['dir']) && is_dir($option['dir'])) {
+    chdir($option['dir']);
+}
+
 $odin = new Odin;
 $odin->get('bootstrap')->checkAndResolveRequirements();
 
