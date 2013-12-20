@@ -57,23 +57,22 @@ class Writer implements ContainerProcessorInterface
         // clean output dir if necessary
         if ($this->outputDirectoryClean === false) {
             $deletedFileCount = $this->cleanOutputDirectory();
-            $this->info['output_cleaned'] = sprintf("Cleaned output directory (deleted $deletedFileCount files).");
+            $this->info['output_cleaned'] = $deletedFileCount;
         }
 
         // copy assets if necessary
         if ($this->assetsCopied === false) {
             $totalFilesizeCopied = $this->copyAssets();
-            $this->info['assets_copied'] = sprintf("Copied assets (~%d kb).", ceil($totalFilesizeCopied / 1024));
+            $this->info['assets_copied'] = ceil($totalFilesizeCopied / 1024);
         }
 
         // create folder structure and write content
         $this->createResourceFolderStructure($resource->meta['destination']);
         $bytesWritten = file_put_contents($resource->meta['destination'], $resource->content);
-        $this->info['resources_written'][] = sprintf(
-            "Wrote \033[01;31m%s\033[0m to %s",
-            $resource->meta['title'],
-            str_replace($this->config->get('base_dir'), '', $resource->meta['destination'])
-        );
+        $this->info['resources_written'][] = [
+            'title'         => $resource->meta['title'],
+            'destination'   => str_replace($this->config->get('output_folder'), '', $resource->meta['destination'])
+        ];
         return $bytesWritten !== false;
     }
 
