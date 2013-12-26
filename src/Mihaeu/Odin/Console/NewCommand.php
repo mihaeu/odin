@@ -8,7 +8,7 @@ namespace Mihaeu\Odin\Console;
  * @package Mihaeu\Odin\Console
  * @author Michael Haeuslmann <haeuslmann@gmail.com>
  */
-class NewCommand
+class NewCommand extends BaseCommand
 {
     protected function configure()
     {
