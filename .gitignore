@@ -3,5 +3,3 @@ config.yml
 .idea
 /output/
 /content/
-/themes/default/bower_components
-/themes/default/node_modules
