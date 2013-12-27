@@ -79,12 +79,13 @@ project_dir: {{ project_dir }}
 output_folder: %project_dir%/output
 resource_folder: %project_dir%/content
 
-base_dir: {{ base_dir }}
-themes_folder: %base_dir%/themes
+themes_folder: %project_dir%/themes
 theme_folder: %themes_folder%/%theme%
 theme_resource_folder: %theme_folder%/resources
+user_templates: %resource_folder%/layouts
+
+base_dir: {{ base_dir }}
 system_resource_folder: %base_dir%/default_templates
 system_templates: %base_dir%/default_templates
-user_templates: %resource_folder%/layouts
 
 resource_extensions: [md,markdown,twig,html,xhtml,rst,txt,xml]

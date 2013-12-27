@@ -1,5 +1,12 @@
 # Odin - Same same, but different
 
+**NOTE: This is under heavy construction and right now I would not recommend anyone to try this out.**
+**Try Jekyll/Octopress (Ruby), Pelican (Python), or Assemble (NodeJS) instead.**
+**I love all of them and they inspired this project quite a bit.**
+
+**Also note that this is more like a wish-list than actual documentation :P**
+
+
 Odin is yet another static site generator, but with an approach that is slightly different.
 
 There are lots of static site/blog generators out there in most of the commonly used languages:
