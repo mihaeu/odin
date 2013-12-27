@@ -19,13 +19,13 @@ class Bootstrap
     public function __construct(TemplatingFactory $templatingFactory)
     {
         $this->templating = $templatingFactory->getTemplating();
-        $this->templating->registerTemplates(__DIR__);
+        $this->templating->registerTemplates(__DIR__.'/../Skeletons');
     }
 
     public function checkRequirements()
     {
         $projectDir = getcwd();
-        return file_exists("$projectDir/content")
+        return file_exists("$projectDir/resources/content")
             && file_exists("$projectDir/output")
             && file_exists("$projectDir/config.yml");
     }
@@ -35,8 +35,9 @@ class Bootstrap
         $projectDir = getcwd();
         echo "Bootstrapping app ...\n";
 
-        if (!file_exists("$projectDir/content")) {
-            mkdir("$projectDir/content");
+        if (!file_exists("$projectDir/resources/content")) {
+            mkdir("$projectDir/resources/content", 0777, true);
+            mkdir("$projectDir/resources/assets", 0777, true);
             echo "Creating content directory ...\n";
         }
 
