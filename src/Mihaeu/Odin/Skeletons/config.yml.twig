@@ -50,16 +50,6 @@ permalink_pattern: {{ permalink_pattern|default("/:title/") }}
 pretty_urls: {{ pretty_urls|default("true")}}
 
 #=================================================================================================#
-# Extra Resources                                                                                 #
-#-------------------------------------------------------------------------------------------------#
-# Odin will create these extra resources from a default template for you. Activating this is      #
-# highly recommended for SEO.                                                                     #
-#=================================================================================================#
-create_sitemap_xml: true
-create_robots_txt: true
-create_humans_txt: true
-
-#=================================================================================================#
 # Theme Configuration                                                                             #
 #-------------------------------------------------------------------------------------------------#
 #                                                                                                 #
@@ -75,17 +65,22 @@ ignore_assets: {{ ignore_assets|default("[bower_components, node_modules]") }}
 #                                                                                                 #
 #=================================================================================================#
 
+# this is the base folder in which all your project files are located
 project_dir: {{ project_dir }}
+
 output_folder: %project_dir%/output
-resource_folder: %project_dir%/content
+resource_folder: %project_dir%/resources/content
 
-themes_folder: %project_dir%/themes
-theme_folder: %themes_folder%/%theme%
+theme_folder: %project_dir%/themes/%theme%
 theme_resource_folder: %theme_folder%/resources
-user_templates: %resource_folder%/layouts
 
+# directory for the odin source
 base_dir: {{ base_dir }}
-system_resource_folder: %base_dir%/default_templates
-system_templates: %base_dir%/default_templates
+
+#=================================================================================================#
+# Misc                                                                                            #
+#-------------------------------------------------------------------------------------------------#
+#                                                                                                 #
+#=================================================================================================#
 
 resource_extensions: [md,markdown,twig,html,xhtml,rst,txt,xml]

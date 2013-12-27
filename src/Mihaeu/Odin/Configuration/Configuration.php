@@ -90,12 +90,7 @@ class Configuration implements ConfigurationInterface
     public function validate()
     {
         $this->validateFolderExistsAndIsReadable('theme_folder');
-        $this->validateFolderExistsAndIsReadable('themes_folder');
         $this->validateFolderExistsAndIsReadable('resource_folder');
-//        $this->validateFolderExistsAndIsReadable('theme_resource_folder', 'theme_folder');
-        $this->validateFolderExistsAndIsReadable('system_resource_folder');
-        $this->validateFolderExistsAndIsReadable('system_templates');
-//        $this->validateFolderExistsAndIsReadable('user_templates');
 
         $this->validateFolderExistsAndIsWritable('output_folder');
     }
