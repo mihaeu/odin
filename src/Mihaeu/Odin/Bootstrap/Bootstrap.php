@@ -51,7 +51,7 @@ class Bootstrap
 
         if (!file_exists("$projectDir/config.yml")) {
             $data = array_merge(
-                $this->defaults,
+                $this->getDefaults(),
                 [
                     'base_dir'    => realpath(__DIR__.'/../../../..'),
                     'project_dir' => $projectDir
