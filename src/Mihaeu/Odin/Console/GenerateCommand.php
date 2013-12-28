@@ -27,7 +27,12 @@ class GenerateCommand extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $odin = $this->odin;
-        $odin->get('bootstrap')->checkAndResolveRequirements();
+        if ($odin->get('bootstrap')->checkRequirements()) {
+            $output->writeln(
+                "<error>Your project does not meet the requirements, please run\n\n./odin new\n\nfirst.</error>"
+            );
+            exit(1);
+        }
 
         $config = $odin->get('config');
 

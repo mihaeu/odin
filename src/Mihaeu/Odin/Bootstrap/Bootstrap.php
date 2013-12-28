@@ -14,7 +14,28 @@ use Mihaeu\Odin\Templating\TemplatingFactory;
  */
 class Bootstrap
 {
+    /**
+     * @var \Mihaeu\Odin\Templating\TwigTemplating
+     */
     private $templating;
+
+    /**
+     * @var array
+     */
+    public $defaults = [
+//        'title'             => [
+//            'value'       => 'Example Blog',
+//            'description' => ''
+//        ],
+        'title'             => 'Example Blog',
+        'subtitle'          => 'This is just the beginning ... example.',
+        'description'       => 'This blog is all about giving examples.',
+        'author'            => 'William Shakespear',
+        'url'               => 'http://localhost:8080',
+        'date_format'       => 'd.m.Y',
+        'permalink_pattern' => '/:title/',
+        'pretty_urls'       => 'true'
+    ];
 
     public function __construct(TemplatingFactory $templatingFactory)
     {
@@ -30,7 +51,7 @@ class Bootstrap
             && file_exists("$projectDir/config.yml");
     }
 
-    public function resolveRequirements()
+    public function resolveRequirements(Array $configItems = null)
     {
         $projectDir = getcwd();
         echo "Bootstrapping app ...\n";
@@ -47,20 +68,27 @@ class Bootstrap
         }
 
         if (!file_exists("$projectDir/config.yml")) {
-            $data = [
-                'base_dir' => realpath(__DIR__.'/../../../..'),
-                'project_dir' => $projectDir
-            ];
+            $data = array_merge(
+                $this->defaults,
+                [
+                    'base_dir'    => realpath(__DIR__.'/../../../..'),
+                    'project_dir' => $projectDir
+                ]
+            );
+            if ($configItems !== null) {
+                // specified config overwrites defaults
+                $data = array_merge($data, $configItems);
+            }
             $config = $this->templating->renderTemplate('config.yml.twig', $data);
             file_put_contents("$projectDir/config.yml", $config);
             echo "Creating config file ...\n";
         }
     }
 
-    public function checkAndResolveRequirements()
+    public function checkAndResolveRequirements(Array $configItems = null)
     {
         if (!$this->checkRequirements()) {
-            $this->resolveRequirements();
+            $this->resolveRequirements($configItems);
         }
     }
 }
