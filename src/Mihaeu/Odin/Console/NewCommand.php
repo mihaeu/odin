@@ -78,7 +78,9 @@ class NewCommand extends BaseCommand
 
     public function getText($key, $defaults)
     {
-        $description = isset($defaults[$key]['description']) ? '   <comment>'.$defaults[$key]['description']."</comment>\n" : "";
+        $description = isset($defaults[$key]['description'])
+            ? '   <comment>'.$defaults[$key]['description']."</comment>\n"
+            : '';
         return "\n - {$defaults[$key]['name']}\n".
             "$description".
             "   [Default: \"{$defaults[$key]['value']}\"]: ";

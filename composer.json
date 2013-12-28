@@ -1,31 +1,31 @@
 {
-    "name": "mihaeu/odin",
-    "description": "Static site generator.",
-    "require": {
-        "aura/di": "1.*",
-        "symfony/yaml": "*",
-        "twig/twig": "*",
-        "symfony/console": "*",
-        "monolog/monolog": "*",
-        "dflydev/markdown": "*",
-        "kzykhys/ciconia": "~1.0.0"
-    },
-    "require-dev": {
-    },
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Michael Haeuslmann",
-            "email": "haeuslmann@gmail.com"
-        }
-    ],
-    "autoload": {
-        "psr-0": {
-            "Mihaeu": "src"
-        }
-    },
-    "bin": [
-        "bin/odin"
-    ],
-    "minimum-stability": "stable"
+  "name": "mihaeu/odin",
+  "description": "Static site generator.",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Michael Haeuslmann",
+      "email": "haeuslmann@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.4",
+    "aura/di": "1.*",
+    "symfony/yaml": "2.*",
+    "twig/twig": "1.*",
+    "symfony/console": "2.*",
+    "dflydev/markdown": "1.*",
+    "kzykhys/ciconia": "~1.0.0"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-0": {
+      "Mihaeu": "src"
+    }
+  },
+  "bin": [
+    "bin/odin"
+  ],
+  "minimum-stability": "stable"
 }
