@@ -39,32 +39,32 @@ class NewCommand extends BaseCommand
         $configItems['title'] = $dialog->ask(
             $output,
             $this->getText('title', $defaults),
-            $defaults['title']
+            $defaults['title']['value']
         );
         $configItems['subtitle'] = $dialog->ask(
             $output,
             $this->getText('subtitle', $defaults),
-            $defaults['subtitle']
+            $defaults['subtitle']['value']
         );
         $configItems['description'] = $dialog->ask(
             $output,
             $this->getText('description', $defaults),
-            $defaults['description']
+            $defaults['description']['value']
         );
         $configItems['author'] = $dialog->ask(
             $output,
             $this->getText('author', $defaults),
-            $defaults['author']
+            $defaults['author']['value']
         );
         $configItems['url'] = $dialog->ask(
             $output,
             $this->getText('url', $defaults),
-            $defaults['url']
+            $defaults['url']['value']
         );
         $configItems['date_format'] = $dialog->ask(
             $output,
             $this->getText('date_format', $defaults),
-            $defaults['date_format']
+            $defaults['date_format']['value']
         );
         $configItems['pretty_urls'] = $dialog->askConfirmation(
             $output,

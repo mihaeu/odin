@@ -50,8 +50,12 @@ class Bootstrap
         }
 
         if (!file_exists("$projectDir/config.yml")) {
+            $defaults = [];
+            foreach ($this->getDefaults() as $key => $default) {
+                $defaults[$key] = $default['value'];
+            }
             $data = array_merge(
-                $this->getDefaults(),
+                $defaults,
                 [
                     'base_dir'    => realpath(__DIR__.'/../../../..'),
                     'project_dir' => $projectDir
