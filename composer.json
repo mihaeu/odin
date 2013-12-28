@@ -24,8 +24,5 @@
       "Mihaeu": "src"
     }
   },
-  "bin": [
-    "bin/odin"
-  ],
   "minimum-stability": "stable"
 }
