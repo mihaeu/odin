@@ -19,24 +19,6 @@ class Bootstrap
      */
     private $templating;
 
-    /**
-     * @var array
-     */
-    public $defaults = [
-//        'title'             => [
-//            'value'       => 'Example Blog',
-//            'description' => ''
-//        ],
-        'title'             => 'Example Blog',
-        'subtitle'          => 'This is just the beginning ... example.',
-        'description'       => 'This blog is all about giving examples.',
-        'author'            => 'William Shakespear',
-        'url'               => 'http://localhost:8080',
-        'date_format'       => 'd.m.Y',
-        'permalink_pattern' => '/:title/',
-        'pretty_urls'       => 'true'
-    ];
-
     public function __construct(TemplatingFactory $templatingFactory)
     {
         $this->templating = $templatingFactory->getTemplating();
@@ -90,5 +72,55 @@ class Bootstrap
         if (!$this->checkRequirements()) {
             $this->resolveRequirements($configItems);
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaults()
+    {
+        return [
+            'title'             => [
+                'name'  => 'Title',
+                'value' => 'Example Blog'
+            ],
+            'subtitle'          => [
+                'name'  => 'Subtitle',
+                'value' => 'This is just the beginning ... example.'
+            ],
+            'description'       => [
+                'name'  => 'Description',
+                'value' => 'This blog is all about giving examples.'
+            ],
+            'author'            => [
+                'name'        => 'Author',
+                'value'       => 'William Shakespear',
+                'description' => 'Authors are optional, but will be used for humans.txt,'.
+                    ' copyright, footer, post meta data etc.'
+            ],
+            'url'               => [
+                'name'        => 'URL',
+                'value'       => 'http://localhost:8080',
+                'description' => 'Please provide the URL to your blog without a trailing slash. '
+            ],
+            'date_format'       => [
+                'name'        => 'Date Format',
+                'value'       => 'd.m.Y',
+                'description' => "Default date format throughout the blog. You can override this everywhere".
+                    " in your templates by using Twigs date() function.\n   (see: http://twig.sensiolabs.org/doc/functions/date.html)"
+            ],
+            'permalink_pattern' => [
+                'name'        => 'Permalink Pattern',
+                'value'       => '/:title/',
+                'description' => "options: :title :Y :y :m :d\n\nExample: /blog/:Y/:m/:title will".
+                    " produce something like /blog/2014/01/awesome-post"
+            ],
+            'pretty_urls'       => [
+                'name'        => 'Pretty URLs',
+                'value'       => 'Y/n',
+                'description' => "If true will create a file structure like\n\n   /awesome-post/index.html\n\n".
+                    "   so the link will be: /awesome-post instead of /awesome-post.html"
+            ]
+        ];
     }
 }

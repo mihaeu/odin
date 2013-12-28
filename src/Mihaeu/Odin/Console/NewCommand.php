@@ -26,52 +26,61 @@ class NewCommand extends BaseCommand
     {
         $odin = $this->odin;
         $bootstrap = $odin->get('bootstrap');
-        $defaults = $bootstrap->defaults;
+        $defaults = $bootstrap->getDefaults();
 
         $dialog = $this->getHelperSet()->get('dialog');
         $output->writeln(
             "<info>Bootstrapping a new odin project: Please answer the following".
                 " questions in order to get started.</info>\n\n<comment>You can always change".
-                " these settings later, by editing config.yml</comment>\n"
+                " these settings later, by editing config.yml</comment>"
         );
 
         $configItems = [];
         $configItems['title'] = $dialog->ask(
             $output,
-            "Blog Title [{$defaults['title']}]: ",
+            $this->getText('title', $defaults),
             $defaults['title']
         );
         $configItems['subtitle'] = $dialog->ask(
             $output,
-            "Blog Subtitle [{$defaults['subtitle']}]: ",
+            $this->getText('subtitle', $defaults),
             $defaults['subtitle']
         );
         $configItems['description'] = $dialog->ask(
             $output,
-            "Blog Description [{$defaults['description']}]: ",
+            $this->getText('description', $defaults),
             $defaults['description']
         );
         $configItems['author'] = $dialog->ask(
             $output,
-            "Author [{$defaults['author']}]: ",
+            $this->getText('author', $defaults),
             $defaults['author']
         );
         $configItems['url'] = $dialog->ask(
             $output,
-            "URL [{$defaults['url']}]: ",
+            $this->getText('url', $defaults),
             $defaults['url']
         );
         $configItems['date_format'] = $dialog->ask(
             $output,
-            "Date Format [{$defaults['date_format']}]: ",
+            $this->getText('date_format', $defaults),
             $defaults['date_format']
         );
         $configItems['pretty_urls'] = $dialog->askConfirmation(
             $output,
-            "Pretty URLs (/about vs. /about.html) [{$defaults['pretty_urls']}]: ",
-            $defaults['pretty_urls']
+            $this->getText('pretty_urls', $defaults),
+            true
         );
+        $output->writeln('');
 
         $bootstrap->checkAndResolveRequirements($configItems);
+    }
+
+    public function getText($key, $defaults)
+    {
+        $description = isset($defaults[$key]['description']) ? '   <comment>'.$defaults[$key]['description']."</comment>\n" : "";
+        return "\n - {$defaults[$key]['name']}\n".
+            "$description".
+            "   [Default: \"{$defaults[$key]['value']}\"]: ";
     }
 }
