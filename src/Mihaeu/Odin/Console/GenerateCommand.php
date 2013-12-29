@@ -21,11 +21,23 @@ class GenerateCommand extends BaseCommand
     {
         $this
             ->setName('generate')
-            ->setDescription('Generates output from resources.');
+            ->setDescription('Generates output from resources.')
+            ->addOption(
+                'dir',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Specify the directory your project resides in explicitly,'.
+                ' in case you are not calling the app from the project directory itself.'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $dir = $input->getOption('dir');
+        if (!empty($dir)) {
+            chdir($dir);
+        }
+
         $odin = $this->odin;
         if (!$odin->get('bootstrap')->checkRequirements()) {
             $output->writeln(
