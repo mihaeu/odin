@@ -198,7 +198,9 @@ class Container
     {
         $flatResources = [];
         foreach ($resources as $resource) {
-            $flatResources[] = $this->flattenResource($resource);
+            $flattenedResource = $this->flattenResource($resource);
+            $key = $flattenedResource['date'].'-'.$flattenedResource['title'];
+            $flatResources[$key] = $flattenedResource;
         }
         return $flatResources;
     }
@@ -215,17 +217,18 @@ class Container
         $tags = [];
         foreach ($this->resources as $resource) {
             $flatResource = $this->flattenResource($resource);
+            $key = $flatResource['date'].'-'.$flatResource['title'];
             if (isset($resource->meta['tags']) && is_array($resource->meta['tags'])) {
                 // multiple tags
                 foreach ($resource->meta['tags'] as $tag) {
-                    $tags[$tag][] = $flatResource;
+                    $tags[$tag][$key] = $flatResource;
                 }
             } elseif (isset($resource->meta['tags'])) {
                 // only one tag
-                $tags[$resource->meta['tags']][] = $flatResource;
+                $tags[$resource->meta['tags']][$key] = $flatResource;
             } elseif (isset($resource->meta['tag'])) {
                 // only one tag
-                $tags[$resource->meta['tag']][] = $flatResource;
+                $tags[$resource->meta['tag']][$key] = $flatResource;
             }
         }
         return $tags;
@@ -243,20 +246,21 @@ class Container
         $categories = [];
         foreach ($this->resources as $resource) {
             $flatResource = $this->flattenResource($resource);
+            $key = $flatResource['date'].'-'.$flatResource['title'];
             if (isset($resource->meta['categories']) && is_array($resource->meta['categories'])) {
                 // multiple categories
                 foreach ($resource->meta['categories'] as $category) {
-                    $categories[$category][] = $flatResource;
+                    $categories[$category][$key] = $flatResource;
                 }
             } elseif (isset($resource->meta['categories'])) {
                 // only one category
-                $categories[$resource->meta['categories']][] = $flatResource;
+                $categories[$resource->meta['categories']][$key] = $flatResource;
             } elseif (isset($resource->meta['category'])) {
                 // only one category
-                $categories[$resource->meta['category']][] = $flatResource;
+                $categories[$resource->meta['category']][$key] = $flatResource;
             } else {
                 // no category
-                $categories['none'][] = $flatResource;
+                $categories['none'][$key] = $flatResource;
             }
         }
         return $categories;
