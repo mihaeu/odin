@@ -24,6 +24,16 @@ class TwigTemplating implements TemplatingInterface
         $this->loader = new \Twig_Loader_Filesystem();
         $this->twig = new \Twig_Environment($this->loader, $options);
         $this->twig->addExtension(new \Twig_Extension_Debug());
+        $this->twig->addFilter(new \Twig_SimpleFilter('sortBy', function ($array, $key) {
+                uasort($array, function ($resourceA, $resourceB) use ($key) {
+                    if ($resourceA[$key] === $resourceB[$key]) {
+                        return 0;
+                    }
+                    return ($resourceA[$key] < $resourceB[$key]) ? -1 : 1;
+                });
+                return $array;
+            }
+        ));
 
         $stringLoader = new \Twig_Loader_String();
         $this->stringTwig = new \Twig_Environment($stringLoader, $options);
