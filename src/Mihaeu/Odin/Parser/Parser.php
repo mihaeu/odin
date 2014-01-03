@@ -72,12 +72,21 @@ class Parser implements ContainerProcessorInterface
 
     public function checkAndFixMeta(Resource &$resource)
     {
+        $basename = $resource->file->getBasename('.'.$resource->file->getExtension());
         if (empty($resource->meta['title'])) {
-            $resource->meta['title'] = $resource->file->getBasename('.'.$resource->file->getExtension());
+            $resource->meta['title'] = $basename;
+            if (preg_match('/\d{4}-\d{2}-\d{2}-(.+)/', $basename, $matches)) {
+                $resource->meta['title'] = $matches[1];
+            }
         }
 
         if (empty($resource->meta['date'])) {
+            $matches = [];
             $resource->meta['date'] = $resource->file->getMTime();
+            if (preg_match('/(\d{4}-\d{2}-\d{2})-.*/', $basename, $matches)) {
+                $ymdDate = \DateTime::createFromFormat('Y-m-d', $matches[1]);
+                $resource->meta['date'] = $ymdDate->getTimestamp();
+            }
         }
     }
 
