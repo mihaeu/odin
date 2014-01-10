@@ -39,7 +39,7 @@ class Resource
     /**
      * @var array
      */
-    public $meta;
+    public $meta = [];
 
     /**
      * @var int

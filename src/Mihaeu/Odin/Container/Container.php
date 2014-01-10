@@ -27,6 +27,16 @@ class Container
     private $resources;
 
     /**
+     * @var array
+     */
+    private $categories;
+
+    /**
+     * @var array
+     */
+    private $tags;
+
+    /**
      * Constructor.
      */
     public function __construct(ConfigurationInterface $config)
@@ -214,24 +224,28 @@ class Container
      */
     public function getTags()
     {
-        $tags = [];
+        if ($this->tags) {
+            return $this->tags;
+        }
+
+        $this->tags = [];
         foreach ($this->resources as $resource) {
             $flatResource = $this->flattenResource($resource);
             $key = $flatResource['date'].'-'.$flatResource['title'];
             if (isset($resource->meta['tags']) && is_array($resource->meta['tags'])) {
                 // multiple tags
                 foreach ($resource->meta['tags'] as $tag) {
-                    $tags[$tag][$key] = $flatResource;
+                    $this->tags[$tag][$key] = $flatResource;
                 }
             } elseif (isset($resource->meta['tags'])) {
                 // only one tag
-                $tags[$resource->meta['tags']][$key] = $flatResource;
+                $this->tags[$resource->meta['tags']][$key] = $flatResource;
             } elseif (isset($resource->meta['tag'])) {
                 // only one tag
-                $tags[$resource->meta['tag']][$key] = $flatResource;
+                $this->tags[$resource->meta['tag']][$key] = $flatResource;
             }
         }
-        return $tags;
+        return $this->tags;
     }
 
     /**
@@ -243,26 +257,72 @@ class Container
      */
     public function getCategories()
     {
-        $categories = [];
+        if ($this->categories) {
+            return $this->categories;
+        }
+
+        $this->categories = [];
         foreach ($this->resources as $resource) {
             $flatResource = $this->flattenResource($resource);
             $key = $flatResource['date'].'-'.$flatResource['title'];
             if (isset($resource->meta['categories']) && is_array($resource->meta['categories'])) {
                 // multiple categories
                 foreach ($resource->meta['categories'] as $category) {
-                    $categories[$category][$key] = $flatResource;
+                    $this->categories[$category][$key] = $flatResource;
                 }
             } elseif (isset($resource->meta['categories'])) {
                 // only one category
-                $categories[$resource->meta['categories']][$key] = $flatResource;
+                $this->categories[$resource->meta['categories']][$key] = $flatResource;
             } elseif (isset($resource->meta['category'])) {
                 // only one category
-                $categories[$resource->meta['category']][$key] = $flatResource;
+                $this->categories[$resource->meta['category']][$key] = $flatResource;
             } else {
                 // no category
-                $categories['none'][$key] = $flatResource;
+                $this->categories['none'][$key] = $flatResource;
             }
         }
-        return $categories;
+        return $this->categories;
+    }
+
+    /**
+     * Generates resources from categories.
+     * 
+     * @return void
+     */
+    public function generateCategories()
+    {
+        foreach ($this->getCategories() as $name => $category) {
+            $fakeFile = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'moab'));
+            $categoryResource = new Resource($fakeFile);
+            $categoryResource->meta = [
+                'title'         => $name,
+                'slug'          => 'category/'.strtolower($name),
+                'date'          => time(),
+                'destination'   => $this->config->get('output_folder').'/category/'.strtolower($name).'/index.html',
+                'layout'        => '@theme/layouts/categories.html.twig'
+            ];
+            $this->setResource(md5($name), $categoryResource);
+        }
+    }
+
+    /**
+     * Generates resources from tags.
+     * 
+     * @return void
+     */
+    public function generateTags()
+    {
+        foreach ($this->getTags() as $name => $tag) {
+            $fakeFile = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'moab'));
+            $tagResource = new Resource($fakeFile);
+            $tagResource->meta = [
+                'title'         => $name,
+                'slug'          => 'tag/'.strtolower($name),
+                'date'          => time(),
+                'destination'   => $this->config->get('output_folder').'/tag/'.strtolower($name).'/index.html',
+                'layout'        => '@theme/layouts/tags.html.twig'
+            ];
+            $this->setResource(md5($name), $tagResource);
+        }
     }
 }

@@ -23,6 +23,9 @@ class BaseCommand extends Command
      */
     protected $odin;
 
+    /**
+     * @inheritdoc
+     */
     public function __construct()
     {
         parent::__construct();
@@ -30,8 +33,40 @@ class BaseCommand extends Command
         $this->odin = new Odin;
     }
 
-    protected function initialize(InputInterface $input = null, OutputInterface $output = null)
+    /**
+     * @inheritdoc
+     */
+    public function initialize(InputInterface $input = null, OutputInterface $output = null)
     {
         $output->writeln($this->getApplication()->signature."\n");
+    }
+
+    /**
+     * Configures the command before it is executed.
+     * 
+     * Sets arguments and options that are common for all commands.
+     *
+     * @return void
+     */
+    protected function configure()
+    {
+        $this
+            ->addOption(
+                'url',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Sets or overwrites the site url configuration value.'
+            )
+            ->addOption(
+                'title',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Sets or overwrites the site title configuration value.'
+            )->addOption(
+                'config',
+                null,
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'Sets or overwrites a key:value config pair (e.g. --config="subtitle:Check this out!").'
+            );
     }
 }

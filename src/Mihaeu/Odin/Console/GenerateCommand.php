@@ -29,6 +29,8 @@ class GenerateCommand extends BaseCommand
                 'Specify the directory your project resides in explicitly,'.
                 ' in case you are not calling the app from the project directory itself.'
             );
+
+        parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -47,6 +49,18 @@ class GenerateCommand extends BaseCommand
         }
 
         $config = $odin->get('config');
+        if ($input->getOption('title')) {
+            $config->set('title', $input->getOption('title'));
+        }
+        if ($input->getOption('url')) {
+            $config->set('url', $input->getOption('url'));
+        }
+        if ($input->getOption('config')) {
+            foreach ($input->getOption('config') as $item) {
+                list($key, $value) = explode(':', $item, 2);
+                $config->set($key, $value);
+            }
+        }
 
         $locator = $odin->get('locator');
         $userResources = $locator->locate($config->get('resource_folder'), Resource::TYPE_USER);
@@ -58,7 +72,11 @@ class GenerateCommand extends BaseCommand
 
         $odin->get('parser')->process($container);
         $odin->get('transformer')->process($container);
+
+        $container->generateCategories();
+        $container->generateTags();
         $odin->get('templating')->process($container);
+        
         $writer = $odin->get('writer');
         $writer->process($container);
 
