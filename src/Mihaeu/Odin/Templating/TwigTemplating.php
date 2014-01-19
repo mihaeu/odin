@@ -34,6 +34,11 @@ class TwigTemplating implements TemplatingInterface
                 return $array;
             }
         ));
+        $this->twig->addFilter(new \Twig_SimpleFilter('relativeTo', function ($url, $slug) {
+            $offset = $slug === 'index.html' ? 0 : 1;
+            $depth = preg_match_all('/\//', $slug) + $offset;
+            return str_repeat('../', $depth).$url;
+        }));
 
         $stringLoader = new \Twig_Loader_String();
         $this->stringTwig = new \Twig_Environment($stringLoader, $options);
