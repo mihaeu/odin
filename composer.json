@@ -2,6 +2,8 @@
   "name": "odin/odin",
   "description": "Static site generator.",
   "license": "MIT",
+  "keywords": ["blog", "cms", "static"],
+  "homepage": "https://github.com/mihaeu/odin",
   "authors": [
     {
       "name": "Michael Haeuslmann",
@@ -18,11 +20,16 @@
     "kzykhys/ciconia": "~1.0.0"
   },
   "require-dev": {
+    "phpunit/phpunit": "3.7.*",
+    "behat/behat": "*"
   },
   "autoload": {
     "psr-0": {
       "Mihaeu": "src"
     }
   },
+  "bin": [
+    "bin/odin"
+  ],
   "minimum-stability": "stable"
 }
