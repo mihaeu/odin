@@ -33,6 +33,10 @@ class MarkdownTransformer implements TransformerInterface
     }
 
     /**
+     * Transform a resource's content.
+     *
+     * @TODO pandoc support
+     *
      * @param Resource $resource
      *
      * @return string
@@ -45,6 +49,7 @@ class MarkdownTransformer implements TransformerInterface
         $configGithubFLavoredMarkdown = true;
         if ($configPandoc && $pandocIsInstalled) {
             // use pandoc
+            throw new \Exception("Pandoc support has not been implemented yet. Sorry.");
         } else {
             if (defined(PHP_VERSION_ID) && PHP_VERSION_ID >= 50400) {
                 $ciconia = new Ciconia();
