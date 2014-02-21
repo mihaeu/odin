@@ -1,5 +1,7 @@
 # Odin - Same same, but different
 
+[![Build Status](https://travis-ci.org/mihaeu/odin.png?branch=master)](https://travis-ci.org/mihaeu/odin)
+
 **NOTE: This is under heavy construction and right now I would not recommend anyone to try this out.**
 **Try Jekyll/Octopress (Ruby), Pelican (Python), or Assemble (NodeJS) instead.**
 **I love all of them and they inspired this project quite a bit.**
