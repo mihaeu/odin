@@ -34,13 +34,13 @@ class Locator
      * Recursively search a path for resources.
      *
      * @param string $path  Path to the folder containing the resources.
-     * @param int    $type  Type of resources t be found at this path (Resource::TYPE_USER etc.)
+     * @param int    $type  Type of resources to be found at this path (Resource::TYPE_USER etc.)
      *
      * @return array Resources
      */
-    public function locate($path, $type)
+    public function locate($path, $type = Resource::TYPE_USER)
     {
-        if (!file_exists($path) || !is_dir($path)) {
+        if (!is_readable($path) || !is_dir($path)) {
             return [];
         }
 

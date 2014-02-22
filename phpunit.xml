@@ -19,4 +19,8 @@
         <log type="coverage-clover" target="build/clover_report/coverage.xml" />
     </logging>
 
+    <listeners>
+        <listener class="\Mockery\Adapter\Phpunit\TestListener"></listener>
+    </listeners>
+
 </phpunit>
