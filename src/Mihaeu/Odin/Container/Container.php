@@ -59,15 +59,18 @@ class Container
     /**
      * Adds a resource to the container, assuming it didn't exist before.
      *
+     * @todo should return ID not bool
+     *
      * @param Resource $resource
      *
      * @return bool
      */
     public function addResource(Resource $resource)
     {
-        if (empty($this->resources[$resource->getId()])) {
-            $this->setResource($resource->getId(), $resource);
-            return true;
+        $id = $resource->getId();
+        if (empty($this->resources[$id])) {
+            $this->setResource($id, $resource);
+            return $id;
         }
         return false;
     }
@@ -286,7 +289,7 @@ class Container
 
     /**
      * Generates resources from categories.
-     * 
+     *
      * @return void
      */
     public function generateCategories()
@@ -307,7 +310,7 @@ class Container
 
     /**
      * Generates resources from tags.
-     * 
+     *
      * @return void
      */
     public function generateTags()

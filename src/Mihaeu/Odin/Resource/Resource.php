@@ -69,31 +69,16 @@ class Resource
         $this->content = file_get_contents($this->file->getRealPath());
     }
 
+    /**
+     * Generates (lazy) a unique id based on file contents and path.
+     *
+     * @return string
+     */
     public function getId()
     {
         if (empty($this->id)) {
-            $this->id = md5($this->file->getRealPath().file_get_contents($this->file->getRealPath()));
+            $this->id = md5($this->file->getRealPath()).md5_file($this->file->getRealPath());
         }
         return $this->id;
-    }
-
-    /**
-     * Determines if the meta information has already been parsed or not.
-     *
-     * @return bool
-     */
-    public function isParsed()
-    {
-        return !empty($this->meta);
-    }
-
-    /**
-     * Determines ist the content has already been transformed or not.
-     *
-     * @return bool
-     */
-    public function isTransformed()
-    {
-        return $this->contentType >= 0;
     }
 }
