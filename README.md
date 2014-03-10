@@ -1,6 +1,8 @@
 # Odin - Same same, but different
 
 [![Build Status](https://travis-ci.org/mihaeu/odin.png?branch=master)](https://travis-ci.org/mihaeu/odin)
+[![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/mihaeu/odin/badges/quality-score.png?s=bcb011475ef07f353eeebf8739e5bfca28e73acb)](https://scrutinizer-ci.com/g/mihaeu/odin/)
+[![Code Coverage](https://scrutinizer-ci.com/g/mihaeu/odin/badges/coverage.png?s=027802b91b988241110959e0c62b56872286fd41)](https://scrutinizer-ci.com/g/mihaeu/odin/)
 
 **NOTE: This is under heavy construction and right now I would not recommend anyone to try this out.**
 **Try Jekyll/Octopress (Ruby), Pelican (Python), or Assemble (NodeJS) instead.**
