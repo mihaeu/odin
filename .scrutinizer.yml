@@ -5,7 +5,7 @@ before_commands:
     - "composer install --prefer-source"
 
 tools:
-    code_coverage: true
+    php_code_coverage: true
 
     # Copy/Paste Detector
     php_cpd: true
