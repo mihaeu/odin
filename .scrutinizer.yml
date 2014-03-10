@@ -1,6 +1,21 @@
 imports:
     - php
 
+before_commands:
+    - "composer install --prefer-source"
+
+tools:
+    code_coverage: true
+
+    # Copy/Paste Detector
+    php_cpd: true
+
+    # Metrics
+    php_pdepend: true
+
+    # Some Metrics + Bug Detection/Auto-Fixes
+    php_analyzer: true
+
 filter:
     paths: [src/*]
     excluded_paths: [bin/*, build/*, output/*, resources/*, tests/*, vendor/*]
