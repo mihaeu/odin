@@ -1,0 +1,6 @@
+imports:
+    - php
+
+filter:
+    paths: [src/*]
+    excluded_paths: [bin/*, build/*, output/*, resources/*, tests/*, vendor/*]
